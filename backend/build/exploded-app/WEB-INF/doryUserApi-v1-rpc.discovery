@@ -1,6 +1,6 @@
 {
  "kind": "discovery#rpcDescription",
- "etag": "\"zRMgE0l9nVDW4S28VYYcYQF9UW4/Mn42gJ7uSX6N2RZDxGyJ7uVBMW0\"",
+ "etag": "\"zRMgE0l9nVDW4S28VYYcYQF9UW4/6DBcr1hR_0Iuu-tBW9s9r8c3D2Y\"",
  "discoveryVersion": "v1",
  "id": "doryUserApi:v1",
  "name": "doryUserApi",
@@ -71,6 +71,21 @@
   }
  },
  "schemas": {
+  "CollectionResponse_DoryUser": {
+   "id": "CollectionResponse_DoryUser",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "$ref": "DoryUser"
+     }
+    },
+    "nextPageToken": {
+     "type": "string"
+    }
+   }
+  },
   "DoryUser": {
    "id": "DoryUser",
    "type": "object",
@@ -93,8 +108,8 @@
   }
  },
  "methods": {
-  "doryUserApi.getDoryUser": {
-   "id": "doryUserApi.getDoryUser",
+  "doryUserApi.get": {
+   "id": "doryUserApi.get",
    "allowGet": true,
    "parameters": {
     "id": {
@@ -113,8 +128,8 @@
     "https://www.googleapis.com/auth/userinfo.email"
    ]
   },
-  "doryUserApi.insertDoryUser": {
-   "id": "doryUserApi.insertDoryUser",
+  "doryUserApi.insert": {
+   "id": "doryUserApi.insert",
    "parameters": {
     "resource": {
      "$ref": "DoryUser"
@@ -122,6 +137,93 @@
    },
    "parameterOrder": [
     "resource"
+   ],
+   "returns": {
+    "$ref": "DoryUser"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "doryUserApi.list": {
+   "id": "doryUserApi.list",
+   "allowGet": true,
+   "parameters": {
+    "cursor": {
+     "type": "string"
+    },
+    "limit": {
+     "type": "integer",
+     "format": "int32"
+    }
+   },
+   "returns": {
+    "$ref": "CollectionResponse_DoryUser"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "doryUserApi.patch": {
+   "id": "doryUserApi.patch",
+   "supportsPatch": true,
+   "parameters": {
+    "firstName": {
+     "type": "string"
+    },
+    "id": {
+     "type": "string",
+     "format": "int64"
+    },
+    "lastName": {
+     "type": "string"
+    },
+    "locationID": {
+     "type": "string",
+     "format": "int64"
+    }
+   },
+   "parameterOrder": [
+    "id"
+   ],
+   "returns": {
+    "$ref": "DoryUser"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "doryUserApi.remove": {
+   "id": "doryUserApi.remove",
+   "parameters": {
+    "id": {
+     "type": "string",
+     "required": true,
+     "format": "int64"
+    }
+   },
+   "parameterOrder": [
+    "id"
+   ],
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "doryUserApi.update": {
+   "id": "doryUserApi.update",
+   "parameters": {
+    "id": {
+     "type": "string",
+     "required": true,
+     "format": "int64"
+    },
+    "resource": {
+     "$ref": "DoryUser"
+    }
+   },
+   "parameterOrder": [
+    "resource",
+    "id"
    ],
    "returns": {
     "$ref": "DoryUser"

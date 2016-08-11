@@ -5,11 +5,10 @@ import com.googlecode.objectify.annotation.Id;
 
 @Entity
 public class DoryUser {
-    @Id
-    private Long id;
-    private String firstName;
-    private String lastName;
-    private Long locationID;
+    @Id Long id;
+    String firstName;
+    String lastName;
+    Long locationID;
 
     public Long getId() {
         return id;
