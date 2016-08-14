@@ -25,8 +25,14 @@ public class ExampleUnitTest {
     private final LocalServiceTestHelper helper = new LocalServiceTestHelper();
 
     @Before
-    public void setUp() {
+    public void setUp() throws IOException {
         helper.setUp();
+        DoryUserApi userApi = getDoryUserApi();
+
+        for (Long id : TestUsers.TestUserIds) {
+            if(DoesUserExist(userApi,TestUsers.get(id)))
+                userApi.remove(id).execute();
+        }
     }
 
     @After
@@ -78,8 +84,6 @@ public class ExampleUnitTest {
 
         SafeInsertUser(user1);
         SafeInsertUser(user2);
-
-
 
         FriendshipApi friendshipApi = getFriendshipApi();
 
