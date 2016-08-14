@@ -1,6 +1,6 @@
 {
  "kind": "discovery#restDescription",
- "etag": "\"zRMgE0l9nVDW4S28VYYcYQF9UW4/EvCtNGhIZcgCs5hy31v5eOrLi8c\"",
+ "etag": "\"zRMgE0l9nVDW4S28VYYcYQF9UW4/uDkR5NAJGUMjsWS4i1IqI5o_qpI\"",
  "discoveryVersion": "v1",
  "id": "locationApi:v1",
  "name": "locationApi",
@@ -73,6 +73,21 @@
   }
  },
  "schemas": {
+  "CollectionResponse_Location": {
+   "id": "CollectionResponse_Location",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "$ref": "Location"
+     }
+    },
+    "nextPageToken": {
+     "type": "string"
+    }
+   }
+  },
   "Location": {
    "id": "Location",
    "type": "object",
@@ -99,8 +114,8 @@
   }
  },
  "methods": {
-  "getLocation": {
-   "id": "locationApi.getLocation",
+  "get": {
+   "id": "locationApi.get",
    "path": "location/{id}",
    "httpMethod": "GET",
    "parameters": {
@@ -121,10 +136,102 @@
     "https://www.googleapis.com/auth/userinfo.email"
    ]
   },
-  "insertLocation": {
-   "id": "locationApi.insertLocation",
+  "insert": {
+   "id": "locationApi.insert",
    "path": "location",
    "httpMethod": "POST",
+   "request": {
+    "$ref": "Location",
+    "parameterName": "resource"
+   },
+   "response": {
+    "$ref": "Location"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "list": {
+   "id": "locationApi.list",
+   "path": "location",
+   "httpMethod": "GET",
+   "parameters": {
+    "cursor": {
+     "type": "string",
+     "location": "query"
+    },
+    "limit": {
+     "type": "integer",
+     "format": "int32",
+     "location": "query"
+    }
+   },
+   "response": {
+    "$ref": "CollectionResponse_Location"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "patch": {
+   "id": "locationApi.patch",
+   "path": "location/{id}",
+   "httpMethod": "PATCH",
+   "parameters": {
+    "id": {
+     "type": "string",
+     "required": true,
+     "format": "int64",
+     "location": "path"
+    }
+   },
+   "parameterOrder": [
+    "id"
+   ],
+   "request": {
+    "$ref": "Location"
+   },
+   "response": {
+    "$ref": "Location"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "remove": {
+   "id": "locationApi.remove",
+   "path": "location/{id}",
+   "httpMethod": "DELETE",
+   "parameters": {
+    "id": {
+     "type": "string",
+     "required": true,
+     "format": "int64",
+     "location": "path"
+    }
+   },
+   "parameterOrder": [
+    "id"
+   ],
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "update": {
+   "id": "locationApi.update",
+   "path": "location/{id}",
+   "httpMethod": "PUT",
+   "parameters": {
+    "id": {
+     "type": "string",
+     "required": true,
+     "format": "int64",
+     "location": "path"
+    }
+   },
+   "parameterOrder": [
+    "id"
+   ],
    "request": {
     "$ref": "Location",
     "parameterName": "resource"

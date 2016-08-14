@@ -1,6 +1,6 @@
 {
  "kind": "discovery#rpcDescription",
- "etag": "\"zRMgE0l9nVDW4S28VYYcYQF9UW4/80VVYUTfRV0c85u_A6TjvUabOyI\"",
+ "etag": "\"zRMgE0l9nVDW4S28VYYcYQF9UW4/gNrfzX7ribsfiMav5GujvnM76-o\"",
  "discoveryVersion": "v1",
  "id": "friendshipApi:v1",
  "name": "friendshipApi",
@@ -71,6 +71,21 @@
   }
  },
  "schemas": {
+  "CollectionResponse_Friendship": {
+   "id": "CollectionResponse_Friendship",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "$ref": "Friendship"
+     }
+    },
+    "nextPageToken": {
+     "type": "string"
+    }
+   }
+  },
   "DateTime": {
    "id": "DateTime",
    "type": "object",
@@ -138,8 +153,8 @@
   }
  },
  "methods": {
-  "friendshipApi.getFriendship": {
-   "id": "friendshipApi.getFriendship",
+  "friendshipApi.get": {
+   "id": "friendshipApi.get",
    "allowGet": true,
    "parameters": {
     "id": {
@@ -158,8 +173,8 @@
     "https://www.googleapis.com/auth/userinfo.email"
    ]
   },
-  "friendshipApi.insertFriendship": {
-   "id": "friendshipApi.insertFriendship",
+  "friendshipApi.insert": {
+   "id": "friendshipApi.insert",
    "parameters": {
     "resource": {
      "$ref": "Friendship"
@@ -167,6 +182,97 @@
    },
    "parameterOrder": [
     "resource"
+   ],
+   "returns": {
+    "$ref": "Friendship"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "friendshipApi.list": {
+   "id": "friendshipApi.list",
+   "allowGet": true,
+   "parameters": {
+    "cursor": {
+     "type": "string"
+    },
+    "limit": {
+     "type": "integer",
+     "format": "int32"
+    }
+   },
+   "returns": {
+    "$ref": "CollectionResponse_Friendship"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "friendshipApi.patch": {
+   "id": "friendshipApi.patch",
+   "supportsPatch": true,
+   "parameters": {
+    "id": {
+     "type": "string",
+     "format": "int64"
+    },
+    "location": {
+     "$ref": "Location"
+    },
+    "time": {
+     "$ref": "DateTime"
+    },
+    "user1": {
+     "type": "string",
+     "format": "int64"
+    },
+    "user2": {
+     "type": "string",
+     "format": "int64"
+    }
+   },
+   "parameterOrder": [
+    "id"
+   ],
+   "returns": {
+    "$ref": "Friendship"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "friendshipApi.remove": {
+   "id": "friendshipApi.remove",
+   "parameters": {
+    "id": {
+     "type": "string",
+     "required": true,
+     "format": "int64"
+    }
+   },
+   "parameterOrder": [
+    "id"
+   ],
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "friendshipApi.update": {
+   "id": "friendshipApi.update",
+   "parameters": {
+    "id": {
+     "type": "string",
+     "required": true,
+     "format": "int64"
+    },
+    "resource": {
+     "$ref": "Friendship"
+    }
+   },
+   "parameterOrder": [
+    "resource",
+    "id"
    ],
    "returns": {
     "$ref": "Friendship"

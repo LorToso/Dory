@@ -3,9 +3,6 @@ package com.doryapp.backend;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 
-/**
- * Created by Lorenzo Toso on 11.08.2016.
- */
 @Entity
 public class Location {
     @Id Long id;

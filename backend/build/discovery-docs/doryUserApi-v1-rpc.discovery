@@ -1,6 +1,6 @@
 {
  "kind": "discovery#rpcDescription",
- "etag": "\"zRMgE0l9nVDW4S28VYYcYQF9UW4/6DBcr1hR_0Iuu-tBW9s9r8c3D2Y\"",
+ "etag": "\"zRMgE0l9nVDW4S28VYYcYQF9UW4/5jqcOVhjibaWwIdx-kmNtFclpG4\"",
  "discoveryVersion": "v1",
  "id": "doryUserApi:v1",
  "name": "doryUserApi",
@@ -100,7 +100,7 @@
     "lastName": {
      "type": "string"
     },
-    "locationID": {
+    "location": {
      "type": "string",
      "format": "int64"
     }
@@ -178,7 +178,7 @@
     "lastName": {
      "type": "string"
     },
-    "locationID": {
+    "location": {
      "type": "string",
      "format": "int64"
     }

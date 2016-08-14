@@ -1,6 +1,6 @@
 {
  "kind": "discovery#rpcDescription",
- "etag": "\"zRMgE0l9nVDW4S28VYYcYQF9UW4/EvCtNGhIZcgCs5hy31v5eOrLi8c\"",
+ "etag": "\"zRMgE0l9nVDW4S28VYYcYQF9UW4/uDkR5NAJGUMjsWS4i1IqI5o_qpI\"",
  "discoveryVersion": "v1",
  "id": "locationApi:v1",
  "name": "locationApi",
@@ -71,6 +71,21 @@
   }
  },
  "schemas": {
+  "CollectionResponse_Location": {
+   "id": "CollectionResponse_Location",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "$ref": "Location"
+     }
+    },
+    "nextPageToken": {
+     "type": "string"
+    }
+   }
+  },
   "Location": {
    "id": "Location",
    "type": "object",
@@ -97,8 +112,8 @@
   }
  },
  "methods": {
-  "locationApi.getLocation": {
-   "id": "locationApi.getLocation",
+  "locationApi.get": {
+   "id": "locationApi.get",
    "allowGet": true,
    "parameters": {
     "id": {
@@ -117,8 +132,8 @@
     "https://www.googleapis.com/auth/userinfo.email"
    ]
   },
-  "locationApi.insertLocation": {
-   "id": "locationApi.insertLocation",
+  "locationApi.insert": {
+   "id": "locationApi.insert",
    "parameters": {
     "resource": {
      "$ref": "Location"
@@ -126,6 +141,97 @@
    },
    "parameterOrder": [
     "resource"
+   ],
+   "returns": {
+    "$ref": "Location"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "locationApi.list": {
+   "id": "locationApi.list",
+   "allowGet": true,
+   "parameters": {
+    "cursor": {
+     "type": "string"
+    },
+    "limit": {
+     "type": "integer",
+     "format": "int32"
+    }
+   },
+   "returns": {
+    "$ref": "CollectionResponse_Location"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "locationApi.patch": {
+   "id": "locationApi.patch",
+   "supportsPatch": true,
+   "parameters": {
+    "country": {
+     "type": "string"
+    },
+    "id": {
+     "type": "string",
+     "format": "int64"
+    },
+    "latitude": {
+     "type": "number",
+     "format": "double"
+    },
+    "longitude": {
+     "type": "number",
+     "format": "double"
+    },
+    "name": {
+     "type": "string"
+    }
+   },
+   "parameterOrder": [
+    "id"
+   ],
+   "returns": {
+    "$ref": "Location"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "locationApi.remove": {
+   "id": "locationApi.remove",
+   "parameters": {
+    "id": {
+     "type": "string",
+     "required": true,
+     "format": "int64"
+    }
+   },
+   "parameterOrder": [
+    "id"
+   ],
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "locationApi.update": {
+   "id": "locationApi.update",
+   "parameters": {
+    "id": {
+     "type": "string",
+     "required": true,
+     "format": "int64"
+    },
+    "resource": {
+     "$ref": "Location"
+    }
+   },
+   "parameterOrder": [
+    "resource",
+    "id"
    ],
    "returns": {
     "$ref": "Location"

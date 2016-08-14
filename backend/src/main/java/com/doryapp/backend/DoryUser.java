@@ -8,7 +8,8 @@ public class DoryUser {
     @Id Long id;
     String firstName;
     String lastName;
-    Long locationID;
+    //@Load Ref<Location> location;
+    Long location;
 
     public Long getId() {
         return id;
@@ -34,11 +35,19 @@ public class DoryUser {
         this.lastName = lastName;
     }
 
-    public Long getLocationID() {
-        return locationID;
+//    public Location getLocation() {
+//        return ofy().load().type(Location.class).id(location.getValue().getId()).now();
+//    }
+//
+//    public void setLocation(Location location) {
+//        //ofy().save().entity(location).now().
+//        //this.location = new Ref<Location>(location);
+//    }
+    public Long getLocation() {
+        return this.location;
     }
 
-    public void setLocationID(Long locationID) {
-        this.locationID = locationID;
+    public void setLocation(Long location) {
+        this.location = location;
     }
 }
