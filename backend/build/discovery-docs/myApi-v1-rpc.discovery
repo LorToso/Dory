@@ -1,6 +1,6 @@
 {
  "kind": "discovery#rpcDescription",
- "etag": "\"zRMgE0l9nVDW4S28VYYcYQF9UW4/zTTCtp3qu8sUXySwPr2Ffl0AHb4\"",
+ "etag": "\"zRMgE0l9nVDW4S28VYYcYQF9UW4/deFJjxtUFb7BvkJw_VvzAFbYqYU\"",
  "discoveryVersion": "v1",
  "id": "myApi:v1",
  "name": "myApi",
@@ -70,18 +70,154 @@
    }
   }
  },
- "methods": {
-  "myApi.sayHi": {
-   "id": "myApi.sayHi",
-   "parameters": {
-    "name": {
+ "schemas": {
+  "DateTime": {
+   "id": "DateTime",
+   "type": "object",
+   "properties": {
+    "dateOnly": {
+     "type": "boolean"
+    },
+    "timeZoneShift": {
+     "type": "integer",
+     "format": "int32"
+    },
+    "value": {
      "type": "string",
-     "required": true
+     "format": "int64"
+    }
+   }
+  },
+  "DoryUser": {
+   "id": "DoryUser",
+   "type": "object",
+   "properties": {
+    "firstName": {
+     "type": "string"
+    },
+    "id": {
+     "type": "string",
+     "format": "int64"
+    },
+    "lastName": {
+     "type": "string"
+    },
+    "location": {
+     "type": "string",
+     "format": "int64"
+    }
+   }
+  },
+  "DoryUserCollection": {
+   "id": "DoryUserCollection",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "$ref": "DoryUser"
+     }
+    }
+   }
+  },
+  "Friendship": {
+   "id": "Friendship",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "int64"
+    },
+    "location": {
+     "$ref": "Location"
+    },
+    "time": {
+     "$ref": "DateTime"
+    },
+    "user1": {
+     "type": "string",
+     "format": "int64"
+    },
+    "user2": {
+     "type": "string",
+     "format": "int64"
+    }
+   }
+  },
+  "FriendshipCollection": {
+   "id": "FriendshipCollection",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "$ref": "Friendship"
+     }
+    }
+   }
+  },
+  "Location": {
+   "id": "Location",
+   "type": "object",
+   "properties": {
+    "country": {
+     "type": "string"
+    },
+    "id": {
+     "type": "string",
+     "format": "int64"
+    },
+    "latitude": {
+     "type": "number",
+     "format": "double"
+    },
+    "longitude": {
+     "type": "number",
+     "format": "double"
+    },
+    "name": {
+     "type": "string"
+    }
+   }
+  }
+ },
+ "methods": {
+  "myApi.getFriends": {
+   "id": "myApi.getFriends",
+   "allowGet": true,
+   "parameters": {
+    "id": {
+     "type": "string",
+     "required": true,
+     "format": "int64"
     }
    },
    "parameterOrder": [
-    "name"
+    "id"
    ],
+   "returns": {
+    "$ref": "DoryUserCollection"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "myApi.getFriendships": {
+   "id": "myApi.getFriendships",
+   "allowGet": true,
+   "parameters": {
+    "id": {
+     "type": "string",
+     "required": true,
+     "format": "int64"
+    }
+   },
+   "parameterOrder": [
+    "id"
+   ],
+   "returns": {
+    "$ref": "FriendshipCollection"
+   },
    "scopes": [
     "https://www.googleapis.com/auth/userinfo.email"
    ]

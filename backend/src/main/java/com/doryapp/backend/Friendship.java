@@ -4,13 +4,14 @@ import com.google.appengine.repackaged.com.google.api.client.util.DateTime;
 
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Index;
 
 @Entity
 public class Friendship {
     @Id Long id;
 
-    Long user1;
-    Long user2;
+    @Index Long user1;
+    @Index Long user2;
 
     Location location;
     DateTime time;

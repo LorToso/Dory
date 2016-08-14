@@ -3,7 +3,8 @@ package com.doryapp.dory;
 import com.doryapp.backend.doryUserApi.DoryUserApi;
 import com.doryapp.backend.doryUserApi.model.DoryUser;
 import com.doryapp.backend.friendshipApi.FriendshipApi;
-import com.doryapp.backend.friendshipApi.model.Friendship;
+import com.doryapp.backend.myApi.MyApi;
+import com.doryapp.backend.myApi.model.Friendship;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
@@ -15,11 +16,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.List;
 
 
-/**
- * To work on unit tests, switch the Test Artifact in the Build Variants view.
- */
 public class ExampleUnitTest {
 
     private final LocalServiceTestHelper helper = new LocalServiceTestHelper();
@@ -27,16 +26,35 @@ public class ExampleUnitTest {
     @Before
     public void setUp() throws IOException {
         helper.setUp();
+        resetTestData();
+
+    }
+
+    private void resetTestData() throws IOException {
         DoryUserApi userApi = getDoryUserApi();
+        FriendshipApi friendApi = getFriendshipApi();
+        MyApi api = getMyApi();
 
         for (Long id : TestUsers.TestUserIds) {
-            if(DoesUserExist(userApi,TestUsers.get(id)))
+            DoryUser user = TestUsers.get(id);
+
+            List<Friendship> friends = api.getFriendships(user.getId()).execute().getItems();
+            if(DoesUserExist(userApi,user))
                 userApi.remove(id).execute();
+
+            deleteAllFriendships(friendApi, friends);
+        }
+    }
+
+    private void deleteAllFriendships(FriendshipApi friendApi, List<Friendship> friends) throws IOException {
+        for (Friendship friendship : friends) {
+            friendApi.remove(friendship.getId()).execute();
         }
     }
 
     @After
-    public void tearDown() {
+    public void tearDown() throws IOException {
+        resetTestData();
         helper.tearDown();
     }
 
@@ -77,8 +95,6 @@ public class ExampleUnitTest {
 
     @Test
     public void canAddFriendship() throws IOException {
-
-
         DoryUser user1 = TestUsers.get(1L);
         DoryUser user2 = TestUsers.get(2L);
 
@@ -86,14 +102,24 @@ public class ExampleUnitTest {
         SafeInsertUser(user2);
 
         FriendshipApi friendshipApi = getFriendshipApi();
+        MyApi myApi = getMyApi();
 
-        Friendship friendship = new Friendship();
+        com.doryapp.backend.friendshipApi.model.Friendship friendship = new com.doryapp.backend.friendshipApi.model.Friendship();
         friendship.setUser1(user1.getId());
         friendship.setUser2(user2.getId());
-        friendshipApi.insert(friendship);
+        friendshipApi.insert(friendship).execute();
 
+        List<com.doryapp.backend.myApi.model.DoryUser> friendsOfUser1 = myApi.getFriends(user1.getId()).execute().getItems();
 
+        Assert.assertEquals(1,friendsOfUser1.size());
+        AssertInconvertibleTypes(friendsOfUser1.get(0),user2);
+    }
 
+    private void AssertInconvertibleTypes(com.doryapp.backend.myApi.model.DoryUser user1, DoryUser user2) {
+        Assert.assertEquals(user1.getFirstName(), user2.getFirstName());
+        Assert.assertEquals(user1.getLastName(), user2.getLastName());
+        Assert.assertEquals(user1.getId(), user2.getId());
+        Assert.assertEquals(user1.getLocation(), user2.getLocation());
     }
 
     private void SafeInsertUser(DoryUser user) throws IOException {
@@ -106,23 +132,21 @@ public class ExampleUnitTest {
 
 
     private static DoryUserApi getDoryUserApi() throws IOException {
-        // Use a builder to help formulate the API request.
         DoryUserApi.Builder helloWorld = new DoryUserApi.Builder(new NetHttpTransport(), GsonFactory.getDefaultInstance(), null);
         helloWorld.setApplicationName("doryUserApi");
-        // If running the Cloud Endpoint API locally then point the API stub there by un-commenting the
-        // next line.
         helloWorld.setRootUrl("http://localhost:8080/_ah/api/");
-
         return helloWorld.build();
     }
     private static FriendshipApi getFriendshipApi() throws IOException {
-        // Use a builder to help formulate the API request.
         FriendshipApi.Builder helloWorld = new FriendshipApi.Builder(new NetHttpTransport(), GsonFactory.getDefaultInstance(), null);
         helloWorld.setApplicationName("friendshipApi");
-        // If running the Cloud Endpoint API locally then point the API stub there by un-commenting the
-        // next line.
         helloWorld.setRootUrl("http://localhost:8080/_ah/api/");
-
         return helloWorld.build();
+    }
+    private static MyApi getMyApi() throws IOException {
+        MyApi.Builder helloWorld = new MyApi.Builder(new NetHttpTransport(), GsonFactory.getDefaultInstance(), null);
+        helloWorld.setApplicationName("myApi");
+        helloWorld.setRootUrl("http://localhost:8080/_ah/api/");
+       return helloWorld.build();
     }
 }
