@@ -4,80 +4,69 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Debug;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-import com.facebook.*;
-import com.facebook.appevents.AppEventsLogger;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
-import com.google.android.gms.maps.*;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
+import com.doryapp.backend.myApi.model.DoryUser;
+
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.io.Console;
 import java.net.URI;
-import java.util.Arrays;
-import java.util.List;
 
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    private CallbackManager callbackManager;
     private GoogleMap googleMap;
-    private User self;
+    private DoryUser self;
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseUser mFirebaseUser;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_main);
-        AppEventsLogger.activateApp(this);
-        FacebookSdk.addLoggingBehavior(LoggingBehavior.REQUESTS);
 
-        SetupFacebookLoginButton();
-        SetupGoogleMap();
+        setupFirebase();
+        setupGoogleMap();
     }
 
-    private void SetupGoogleMap() {
+    private void setupFirebase() {
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseUser = mFirebaseAuth.getCurrentUser();
+
+
+        mFirebaseAuth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                mFirebaseUser = firebaseAuth.getCurrentUser();
+                if(mFirebaseUser == null) {
+                    ChangeText("Not logged in","","");
+                    return;
+                }
+                ChangeText(mFirebaseUser.getDisplayName(),mFirebaseUser.getEmail(),mFirebaseUser.getUid());
+            }
+        });
+//(getResources().getString(R.string.firebase_url));
+    }
+
+    private void setupGoogleMap() {
         FragmentManager man = getFragmentManager();
         MapFragment f = (MapFragment) man.findFragmentById(R.id.mapfragment);
         f.getMapAsync(this);
     }
 
-    private void SetupFacebookLoginButton() {
-        callbackManager = CallbackManager.Factory.create();
-
-
-        LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
-        loginButton.setReadPermissions(Arrays.asList("user_location"));
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                ChangeText("Facebook login succeeded", "", "");
-
-            }
-
-            @Override
-            public void onCancel() {
-
-                ChangeText("Facebook login canceled", "", "");
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-
-                ChangeText("Facebook login error:", error.toString(), "");
-            }
-        });
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
-    }
 
     public void onResume() {
         super.onResume();
@@ -90,54 +79,61 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void onButtonClick(View v) {
-        AccessToken token = AccessToken.getCurrentAccessToken();
-
-        if (token == null) {
-            ChangeText("Not logged in.", "", "");
-        } else {
-            User.GetSelf(new User.GetUserCallback() {
-                @Override
-                public void onUser(User user) {
-                    self = user;
-                    ChangeText(
-                            user.firstName + " " + user.lastName,
-                            user.currentCity.currentCityName + ", " + user.currentCity.currentCityCountry,
-                            user.currentCity.currentCityPosition.toString());
-                    ChangePicture(user.fbProfilePicture);
-                    ChangePosition(user.currentCity.currentCityPosition);
-                }
-            });
-        }
+//        AccessToken token = AccessToken.getCurrentAccessToken();
+//
+//        if (token == null) {
+//            ChangeText("Not logged in.", "", "");
+//        } else {
+//            User.GetSelf(new User.GetUserCallback() {
+//                @Override
+//                public void onUser(User user) {
+//                    self = user;
+//                    ChangeText(
+//                            user.firstName + " " + user.lastName,
+//                            user.currentCity.currentCityName + ", " + user.currentCity.currentCityCountry,
+//                            user.currentCity.currentCityPosition.toString());
+//                    ChangePicture(user.fbProfilePicture);
+//                    ChangePosition(user.currentCity.currentCityPosition);
+//                }
+//            });
+//        }
     }
+    public void onClickRegister(View v) {
+        mFirebaseAuth.createUserWithEmailAndPassword("testcreate@test.de", "password");
+    }
+    public void onClickLogin(View v) {
+        mFirebaseAuth.signInWithEmailAndPassword("test@test.de", "password");
+    }
+
     public void onShowFriends(View v)
     {
-        new FBFriendFinder(new FBFriendFinder.UserListCallback()
-        {
-            @Override
-            public void onUserListLoaded(List<User> users) {
-                if(users.isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "No friends use this app", Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
-                    Toast.makeText(getApplicationContext(), "Friends found!", Toast.LENGTH_SHORT).show();
-                    for (User user : users) {
-                        AddMarker(user);
-                    }
-                }
-
-            }
-        }).FindFriends();
+//        new FBFriendFinder(new FBFriendFinder.UserListCallback()
+//        {
+//            @Override
+//            public void onUserListLoaded(List<User> users) {
+//                if(users.isEmpty()) {
+//                    Toast.makeText(getApplicationContext(), "No friends use this app", Toast.LENGTH_SHORT).show();
+//                }
+//                else
+//                {
+//                    Toast.makeText(getApplicationContext(), "Friends found!", Toast.LENGTH_SHORT).show();
+//                    for (User user : users) {
+//                        AddMarker(user);
+//                    }
+//                }
+//
+//            }
+//        }).FindFriends();
     }
 
-    private void AddMarker(final User user) {
-        new DownloadImageTask(new DownloadImageTask.PostDownloadAction() {
-            @Override
-            void onDownloadCompleted(Bitmap result) {
-                MarkerOptions marker = new MarkerOptions().title(user.firstName).position(user.currentCity.currentCityPosition).icon(BitmapDescriptorFactory.fromBitmap(result));
-                googleMap.addMarker(marker);
-            }
-        }).execute(user.fbProfilePicture.toString());
+    private void AddMarker(final DoryUser user) {
+//        new DownloadImageTask(new DownloadImageTask.PostDownloadAction() {
+//            @Override
+//            void onDownloadCompleted(Bitmap result) {
+//                MarkerOptions marker = new MarkerOptions().title(user.getFirstName()).position(user.getcurrentCity.currentCityPosition).icon(BitmapDescriptorFactory.fromBitmap(result));
+//                googleMap.addMarker(marker);
+//            }
+//        }).execute(user.fbProfilePicture.toString());
     }
 
 

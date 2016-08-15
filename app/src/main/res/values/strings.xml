@@ -2,5 +2,7 @@
     <string name="app_name">Dory</string>
     <string name="facebook_app_id">994635050654109</string>
     <string name="fb_login_protocol_scheme">994635050654109</string>
-    <string name="google_app_id">AIzaSyDCMqrju7YoBPBuBoTDaSpOxvJUvhXAwn4</string>
+    <string name="google_app_id">AIzaSyDKR1mCbzPFTtzHRDIFS0gvt127XJUG9XM</string>
+    <string name="google_api_key">AIzaSyDKR1mCbzPFTtzHRDIFS0gvt127XJUG9XM</string>
+    <string name="firebase_url">https://dory-1469989006683.firebaseio.com</string>
 </resources>

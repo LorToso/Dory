@@ -21,14 +21,17 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
+
     compile 'com.android.support:appcompat-v7:24.1.1'
-    compile 'com.facebook.android:facebook-android-sdk:4.+'
     compile 'com.google.android.gms:play-services:9.4.0'
+    compile 'com.google.firebase:firebase-core:9.4.0'
+    compile 'com.google.firebase:firebase-auth:9.2.1'
+
+    testCompile 'junit:junit:4.12'
     testCompile group: 'com.google.appengine', name: 'appengine-testing', version: '1.4.0'
     testCompile group: 'com.google.appengine', name: 'appengine-api-1.0-sdk', version: '1.4.3'
     testCompile 'com.google.http-client:google-http-client-gson:1.20.0'
+    testCompile 'com.google.appengine:appengine-endpoints:1.9.42'
 
     compile project(path: ':backend', configuration: 'android-endpoints')
-    testCompile 'com.google.appengine:appengine-endpoints:1.9.42'
 }
