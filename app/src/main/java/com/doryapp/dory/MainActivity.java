@@ -1,19 +1,15 @@
 package com.doryapp.dory;
 
 import android.app.FragmentManager;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Debug;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.doryapp.backend.myApi.model.DoryUser;
-
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -24,13 +20,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.io.Console;
 import java.net.URI;
 
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap googleMap;
-    private DoryUser self;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
 
@@ -62,20 +56,21 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         if(mFirebaseUser == null)
-        {
-            startActivityForResult(
-                    AuthUI.getInstance()
-                            .createSignInIntentBuilder()
-                            .setProviders(
-                                    AuthUI.EMAIL_PROVIDER,
-                                    AuthUI.GOOGLE_PROVIDER,
-                                    AuthUI.FACEBOOK_PROVIDER)
-                            .build(),
-                    0);//RC_SIGN_IN);
-
-        }
+            showLoginUI();
 
 //(getResources().getString(R.string.firebase_url));
+    }
+
+    private void showLoginUI() {
+        startActivityForResult(
+                AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setProviders(
+                                AuthUI.EMAIL_PROVIDER,
+                                AuthUI.GOOGLE_PROVIDER,
+                                AuthUI.FACEBOOK_PROVIDER)
+                        .build(),
+                0);//RC_SIGN_IN);
     }
 
     private void setupGoogleMap() {
@@ -119,7 +114,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         mFirebaseAuth.createUserWithEmailAndPassword("testcreate@test.de", "password");
     }
     public void onClickLogin(View v) {
-        mFirebaseAuth.signInWithEmailAndPassword("test@test.de", "password");
+        if(mFirebaseUser != null)
+            return;
+        showLoginUI();
     }
     public void onClickLogout(View v)
     {
@@ -159,7 +156,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     private void ChangePosition(final LatLng position) {
-        AddMarker(self);
+        //AddMarker(self);
         CameraUpdate camera = CameraUpdateFactory.newLatLngZoom(position, 10.0f);
         googleMap.moveCamera(camera);
     }
