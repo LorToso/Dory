@@ -67,6 +67,13 @@
 
 
             <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Logout"
+                android:id="@+id/button5"
+                android:onClick="onClickLogout" />
+
+            <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Apply self"

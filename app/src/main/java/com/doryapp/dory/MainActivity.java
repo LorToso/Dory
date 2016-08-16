@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.doryapp.backend.myApi.model.DoryUser;
 
+import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -58,6 +59,22 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 ChangeText(mFirebaseUser.getDisplayName(),mFirebaseUser.getEmail(),mFirebaseUser.getUid());
             }
         });
+
+
+        if(mFirebaseUser == null)
+        {
+            startActivityForResult(
+                    AuthUI.getInstance()
+                            .createSignInIntentBuilder()
+                            .setProviders(
+                                    AuthUI.EMAIL_PROVIDER,
+                                    AuthUI.GOOGLE_PROVIDER,
+                                    AuthUI.FACEBOOK_PROVIDER)
+                            .build(),
+                    0);//RC_SIGN_IN);
+
+        }
+
 //(getResources().getString(R.string.firebase_url));
     }
 
@@ -103,6 +120,10 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     }
     public void onClickLogin(View v) {
         mFirebaseAuth.signInWithEmailAndPassword("test@test.de", "password");
+    }
+    public void onClickLogout(View v)
+    {
+        mFirebaseAuth.signOut();
     }
 
     public void onShowFriends(View v)
