@@ -1,7 +1,7 @@
 package com.doryapp.backend;
 
-import com.google.appengine.repackaged.com.google.api.client.util.DateTime;
 
+import com.google.appengine.repackaged.org.joda.time.DateTime;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;

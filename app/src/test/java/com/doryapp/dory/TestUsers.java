@@ -10,6 +10,9 @@ import java.util.List;
  */
 public class TestUsers {
 
+    public final static String TEST_USER_EMAIL = "test@test.de";
+    public final static String TEST_USER_PASSWORD = "password";
+
     private final static String TEST_LAST_NAME = "lastname_";
     private final static String TEST_FIRST_NAME = "firstname_";
 

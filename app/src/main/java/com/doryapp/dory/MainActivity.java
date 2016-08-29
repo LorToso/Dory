@@ -1,6 +1,7 @@
 package com.doryapp.dory;
 
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,7 +9,9 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.doryapp.backend.myApi.MyApi;
 import com.doryapp.backend.myApi.model.DoryUser;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.maps.CameraUpdate;
@@ -16,10 +19,16 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 
+import java.io.IOException;
 import java.net.URI;
 
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -66,9 +75,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
                         .setProviders(
-                                AuthUI.EMAIL_PROVIDER,
+                                AuthUI.EMAIL_PROVIDER/*,
                                 AuthUI.GOOGLE_PROVIDER,
-                                AuthUI.FACEBOOK_PROVIDER)
+                                AuthUI.FACEBOOK_PROVIDER*/)
                         .build(),
                 0);//RC_SIGN_IN);
     }
@@ -111,7 +120,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 //        }
     }
     public void onClickRegister(View v) {
-        mFirebaseAuth.createUserWithEmailAndPassword("testcreate@test.de", "password");
+        //mFirebaseAuth.createUserWithEmailAndPassword("testcreate@test.de", "password");
     }
     public void onClickLogin(View v) {
         if(mFirebaseUser != null)
@@ -121,30 +130,52 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     public void onClickLogout(View v)
     {
         mFirebaseAuth.signOut();
+        mFirebaseUser = mFirebaseAuth.getCurrentUser(); // Should be null
     }
 
     public void onShowFriends(View v)
     {
-//        new FBFriendFinder(new FBFriendFinder.UserListCallback()
-//        {
-//            @Override
-//            public void onUserListLoaded(List<User> users) {
-//                if(users.isEmpty()) {
-//                    Toast.makeText(getApplicationContext(), "No friends use this app", Toast.LENGTH_SHORT).show();
-//                }
-//                else
-//                {
-//                    Toast.makeText(getApplicationContext(), "Friends found!", Toast.LENGTH_SHORT).show();
-//                    for (User user : users) {
-//                        AddMarker(user);
-//                    }
-//                }
-//
-//            }
-//        }).FindFriends();
+        mFirebaseUser.getToken(true)
+                .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                    public void onComplete(@NonNull Task<GetTokenResult> task) {
+                        if (task.isSuccessful()) {
+
+                            String token = task.getResult().getToken();
+
+                            MyApi api = getApiHandle();
+                            try {
+                                api.getFriends("123");
+                            }
+                            catch (IOException ex)
+                            {
+                                Toast.makeText(this,"Could not find friends", Toast.LENGTH_LONG).show();
+                                return;
+                            }
+                        } else {
+                            Toast.makeText(this,"Could not find friends", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+
+    }
+    public void onClickAddFriend()
+    {
+        Intent startActivity = new Intent(this,AddFriendActivity.class);
+        String TOKEN; // TODO Obtain token or whole User?
+        startActivity.putExtra("user", TOKEN);
+        startActivity(startActivity);
+    }
+
+    private MyApi getApiHandle() {
+        MyApi.Builder builder = new MyApi.Builder(AppConstants.HTTP_TRANSPORT, AppConstants.JSON_FACTORY,null);
+        builder.setRootUrl(getResources().getString(R.string.server_url));
+        builder.setApplicationName("DoryApp");
+        return builder.build();
     }
 
     private void AddMarker(final DoryUser user) {
+        MarkerOptions marker = new MarkerOptions().title(user.getFirstName()).position(new LatLng(0,0));
+        googleMap.addMarker(marker);
 //        new DownloadImageTask(new DownloadImageTask.PostDownloadAction() {
 //            @Override
 //            void onDownloadCompleted(Bitmap result) {

@@ -38,7 +38,8 @@ public class ExampleUnitTest {
         for (Long id : TestUsers.TestUserIds) {
             DoryUser user = TestUsers.get(id);
 
-            List<Friendship> friends = api.getFriendships(user.getId()).execute().getItems();
+
+            List<Friendship> friends = api.getFriendships("0").execute().getItems();
             if(DoesUserExist(userApi,user))
                 userApi.remove(id).execute();
 
@@ -109,7 +110,7 @@ public class ExampleUnitTest {
         friendship.setUser2(user2.getId());
         friendshipApi.insert(friendship).execute();
 
-        List<com.doryapp.backend.myApi.model.DoryUser> friendsOfUser1 = myApi.getFriends(user1.getId()).execute().getItems();
+        List<com.doryapp.backend.myApi.model.DoryUser> friendsOfUser1 = myApi.getFriends("0").execute().getItems();
 
         Assert.assertEquals(1,friendsOfUser1.size());
         AssertInconvertibleTypes(friendsOfUser1.get(0),user2);

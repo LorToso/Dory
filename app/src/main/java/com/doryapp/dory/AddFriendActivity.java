@@ -17,6 +17,7 @@ public class AddFriendActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addfriend);
+        // TODO Obtain token through Intent
     }
     public void onClickSearch(View v)
     {

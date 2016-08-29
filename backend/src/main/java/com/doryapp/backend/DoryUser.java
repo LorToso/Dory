@@ -6,10 +6,19 @@ import com.googlecode.objectify.annotation.Id;
 @Entity
 public class DoryUser {
     @Id Long id;
+    String nickName;
     String firstName;
     String lastName;
-    //@Load Ref<Location> location;
-    Long location;
+    String emailAddress;
+    Location location;
+
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
 
     public Long getId() {
         return id;
@@ -17,6 +26,14 @@ public class DoryUser {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
     public String getFirstName() {
@@ -35,19 +52,11 @@ public class DoryUser {
         this.lastName = lastName;
     }
 
-//    public Location getLocation() {
-//        return ofy().load().type(Location.class).id(location.getValue().getId()).now();
-//    }
-//
-//    public void setLocation(Location location) {
-//        //ofy().save().entity(location).now().
-//        //this.location = new Ref<Location>(location);
-//    }
-    public Long getLocation() {
-        return this.location;
+    public Location getLocation() {
+        return location;
     }
 
-    public void setLocation(Long location) {
+    public void setLocation(Location location) {
         this.location = location;
     }
 }
