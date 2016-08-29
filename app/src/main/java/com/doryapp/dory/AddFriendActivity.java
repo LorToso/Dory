@@ -29,7 +29,28 @@ public class AddFriendActivity extends AppCompatActivity {
 
     private void displayUsers(List<DoryUser> users) {
         ListView view = (ListView)findViewById(R.id.listView);
+        view.removeAllViews();
 
 
+        View.OnClickListener OnUserClicked = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UserDetailsView detailsView = (UserDetailsView)view;
+                sendFriendRequest(detailsView.getUser());
+            }
+        };
+
+        for(DoryUser user : users)
+        {
+            UserDetailsViewWithAddButton detailsView = new UserDetailsViewWithAddButton(this, user);
+            detailsView.setOnClickListener(OnUserClicked);
+            view.addView(detailsView);
+        }
+
+    }
+
+    private void sendFriendRequest(DoryUser user) {
+        MyApi a;
+        a.sendFriendRequest(user.getId());
     }
 }

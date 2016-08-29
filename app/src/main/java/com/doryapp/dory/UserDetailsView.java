@@ -3,7 +3,7 @@ package com.doryapp.dory;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
-import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -14,18 +14,29 @@ import com.doryapp.backend.myApi.model.DoryUser;
  * Created by Lorenzo Toso on 29.08.2016.
  */
 public class UserDetailsView extends LinearLayout{
+
+    protected DoryUser user;
+
     public UserDetailsView(Context context, DoryUser user) {
         super(context);
-        setupUsetDetailsView(context, user);
+        this.user = user;
+        setupUserDetailsView(context, user);
     }
 
-    private void setupUsetDetailsView(Context context, DoryUser user) {
+
+    public DoryUser getUser() {
+        return user;
+    }
+
+    protected void setupUserDetailsView(Context context, DoryUser user) {
+        removeAllViews();
+
         setOrientation(LinearLayout.VERTICAL);
 
         ImageView profilePicture = setupProfilePictureView(context);
-        LinearLayout detailsLayout = setupDetailsView(context, user);
-
         addView(profilePicture);
+
+        LinearLayout detailsLayout = setupDetailsView(context, user);
         addView(detailsLayout);
     }
 
