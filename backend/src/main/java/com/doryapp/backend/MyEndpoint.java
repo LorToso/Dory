@@ -14,6 +14,7 @@ import com.google.api.server.spi.config.Named;
 import com.google.appengine.repackaged.org.joda.time.DateTime;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
+import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.cmd.LoadType;
 
 import java.io.FileInputStream;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
+
 
 /** An endpoint class we are exposing */
 @Api(
@@ -36,6 +38,11 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 )
 public class MyEndpoint {
 
+    static
+    {
+        ObjectifyService.register(Friendship.class);
+
+    }
 
     public MyEndpoint() throws FileNotFoundException {
         FirebaseOptions options = new FirebaseOptions.Builder()

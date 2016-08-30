@@ -18,7 +18,6 @@ public class FirebaseAuthenticator implements Authenticator {
     @Override
     public User authenticate(HttpServletRequest httpServletRequest) {
         String token = httpServletRequest.getHeader("Authorization");
-        String token2 = httpServletRequest.getParameter("oauth_token");
         if (token == null)
             return null;
 

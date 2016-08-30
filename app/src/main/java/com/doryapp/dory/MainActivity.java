@@ -10,13 +10,10 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.doryapp.backend.myApi.MyApi;
-import com.doryapp.backend.myApi.model.CharSequence;
 import com.doryapp.backend.myApi.model.DoryUser;
 import com.doryapp.backend.myApi.model.DoryUserCollection;
-import com.doryapp.backend.myApi.model.FriendshipCollection;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -27,8 +24,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
-import com.google.api.client.http.HttpHeaders;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
@@ -36,7 +31,6 @@ import com.google.firebase.auth.GetTokenResult;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -145,36 +139,31 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         Task<GetTokenResult> task = mFirebaseUser.getToken(true)
                 .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
                     public void onComplete(@NonNull Task<GetTokenResult> task) {
-                        if (task.isSuccessful()) {
-
-                            final String token = task.getResult().getToken();
-
-
-                            new AsyncTask<String, Void, List<DoryUser>>()
-                            {
-                                @Override
-                                protected List<DoryUser> doInBackground(String... tokens) {
-                                    MyApi api = Api.getAuthenticated(MainActivity.this, token);
-                                    List<DoryUser> users = null;
-                                    try {
-                                        //CharSequence s = api.test().execute();
-                                        //FriendshipCollection c = api.getFriendships("123").execute();
-                                        DoryUserCollection c = api.getFriends().execute();
-                                        if(c == null)
-                                            return null;
-                                        users = c.getItems();
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                        return null;
-                                    }
-                                    Toast.makeText(MainActivity.this,"worked!", Toast.LENGTH_LONG).show();
-                                    return users;
-                                }
-                            }.execute(token);
-
-                        } else {
-                            Toast.makeText(MainActivity.this,"Could not find friends", Toast.LENGTH_LONG).show();
+                        if (!task.isSuccessful()) {
+                            return;
                         }
+
+                        final String token = task.getResult().getToken();
+
+                        new AsyncTask<String, Void, List<DoryUser>>()
+                        {
+                            @Override
+                            protected List<DoryUser> doInBackground(String... tokens) {
+                                MyApi api = Api.getAuthenticated(MainActivity.this, token);
+                                List<DoryUser> users = null;
+                                try {
+                                    DoryUserCollection c = api.getFriends().execute();
+                                    if(c == null)
+                                        return null;
+                                    users = c.getItems();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                    return null;
+                                }
+//                                    Toast.makeText(MainActivity.this,"worked!", Toast.LENGTH_LONG).show();
+                                return users;
+                            }
+                        }.execute(token);
                     }
                 });
 
