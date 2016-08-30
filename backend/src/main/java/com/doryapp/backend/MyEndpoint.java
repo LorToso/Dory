@@ -52,67 +52,10 @@ public class MyEndpoint {
     }
 
 
-    private Long UidToId(String uid) {
-
-        FirebaseAuth.getInstance().verifyIdToken(uid).addOnSuccessListener(new OnSuccessListener<FirebaseToken>() {
-            @Override
-            public void onSuccess(FirebaseToken firebaseToken) {
-                String s = firebaseToken.getEmail();
-                int i = 0;
-
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                String s = e.getMessage();
-                int i = 0;
-            }
-        });
-
-
-        try {
-            Thread.sleep(30000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        Task<FirebaseToken> tokenTask = FirebaseAuth.getInstance().verifyIdToken("8EBVMmCX1TdXsLrYyUabrX6b2Aw2");
-        //String customToken = FirebaseAuth.getInstance().createCustomToken("123");
-//                .addOnSuccessListener(new OnSuccessListener<FirebaseToken>() {
-//                    @Override
-//                    public void onSuccess(FirebaseToken decodedToken) {
-//                        String uid = decodedToken.getUid();
-//                        // ...
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        String reason = e.getMessage();
-//                        //
-//                    }
-//                });
-
-        FirebaseToken token;
-        try {
-            token = Tasks.await(tokenTask);
-
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-
-        return 1L;
-
-
-//        DoryUser user = ofy().load().type(DoryUser.class).filter("emailAddress == ", token.getEmail()).first().now();
-//        return user.getId();
-    }
-
-    @ApiMethod(name = "getFriendships")
+    @ApiMethod(name = "getFriendships", path = "getFriendships")
     public List<Friendship> getFriendships(@Named("uid") String uid)
     {
 
-    //    Long id = UidToId(uid);
         Long id = 0L;
         if(id == 0L)
             return null;
@@ -124,9 +67,9 @@ public class MyEndpoint {
         friends1.addAll(friends2);
         return friends1;
     }
-    @ApiMethod(name = "getFriends")
+    @ApiMethod(name = "getFriends", path = "friends")
     public List<DoryUser> getFriends(@Named("uid") String uid) {
-        Long id = UidToId(uid);
+        Long id = 0L;
         if(id == 0L)
             return null;
 
@@ -156,6 +99,14 @@ public class MyEndpoint {
 
         return foundUsers;
     }
+
+    @ApiMethod(name = "test", path = "testMethod")
+    public CharSequence test()
+    {
+        return "test";
+    }
+
+    @ApiMethod(name = "sendFriendRequest", path = "sendRequest")
     public void sendFriendRequest(@Named("friendId") Long friendId)
     {
         Friendship friendship = new Friendship();
@@ -168,6 +119,7 @@ public class MyEndpoint {
         ofy().save().entity(req).now();
     }
 
+    @ApiMethod(name = "acceptFriendRequest", path = "acceptRequest")
     public void acceptFriendRequest(@Named("requestID") Long requestID)
     {
         FriendshipRequest request = ofy().load().type(FriendshipRequest.class).id(requestID).now();
@@ -182,6 +134,8 @@ public class MyEndpoint {
         ofy().save().entity(newFriendship).now();
         ofy().delete().type(FriendshipRequest.class).id(requestID).now();
     }
+
+    @ApiMethod(name = "ignoreFriendRequest", path = "ignoreRequest")
     public void ignoreFriendRequest(@Named("requestID") Long requestID)
     {
         FriendshipRequest request = ofy().load().type(FriendshipRequest.class).id(requestID).now();

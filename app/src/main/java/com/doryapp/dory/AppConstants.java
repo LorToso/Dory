@@ -21,7 +21,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 
-import com.doryapp.backend.doryUserApi.DoryUserApi;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -74,20 +73,6 @@ public class AppConstants {
         }
     }
 
-    /**
-     * Retrieve a Helloworld api service handle to access the API.
-     */
-    public static DoryUserApi getApiServiceHandle(@Nullable GoogleAccountCredential credential) throws IOException {
-        // Use a builder to help formulate the API request.
-        DoryUserApi.Builder helloWorld = new DoryUserApi.Builder(AppConstants.HTTP_TRANSPORT,
-                AppConstants.JSON_FACTORY, credential);
-
-        // If running the Cloud Endpoint API locally then point the API stub there by un-commenting the
-        // next line.
-        helloWorld.setRootUrl("http://192.168.1.100:8080/_ah/api/");
-
-        return helloWorld.build();
-    }
 
     /**
      * Check that Google Play services APK is installed and up to date.

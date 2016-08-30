@@ -1,6 +1,7 @@
 package com.doryapp.dory;
 
-import com.doryapp.backend.doryUserApi.model.DoryUser;
+
+import com.doryapp.backend.myApi.model.DoryUser;
 
 import java.util.ArrayList;
 import java.util.List;

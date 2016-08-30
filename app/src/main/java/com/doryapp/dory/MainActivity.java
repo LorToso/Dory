@@ -3,6 +3,7 @@ package com.doryapp.dory;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
@@ -12,24 +13,29 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.doryapp.backend.myApi.MyApi;
+import com.doryapp.backend.myApi.model.CharSequence;
 import com.doryapp.backend.myApi.model.DoryUser;
+import com.doryapp.backend.myApi.model.DoryUserCollection;
+import com.doryapp.backend.myApi.model.FriendshipCollection;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -135,43 +141,51 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void onShowFriends(View v)
     {
-        mFirebaseUser.getToken(true)
+        Task<GetTokenResult> task = mFirebaseUser.getToken(true)
                 .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
                     public void onComplete(@NonNull Task<GetTokenResult> task) {
                         if (task.isSuccessful()) {
 
                             String token = task.getResult().getToken();
 
-                            MyApi api = getApiHandle();
-                            try {
-                                api.getFriends("123");
-                            }
-                            catch (IOException ex)
+
+                            new AsyncTask<String, Void, List<DoryUser>>()
                             {
-                                Toast.makeText(this,"Could not find friends", Toast.LENGTH_LONG).show();
-                                return;
-                            }
+                                @Override
+                                protected List<DoryUser> doInBackground(String... tokens) {
+                                    MyApi api = Api.get(MainActivity.this);
+                                    List<DoryUser> users = null;
+                                    try {
+                                        //CharSequence s = api.test().execute();
+                                        //FriendshipCollection c = api.getFriendships("123").execute();
+                                        DoryUserCollection c =api.getFriends("abc").execute();
+                                        if(c == null)
+                                            return null;
+                                        users = c.getItems();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                        return null;
+                                    }
+                                    Toast.makeText(MainActivity.this,"worked!", Toast.LENGTH_LONG).show();
+                                    return users;
+                                }
+                            }.execute(token);
+
                         } else {
-                            Toast.makeText(this,"Could not find friends", Toast.LENGTH_LONG).show();
+                            Toast.makeText(MainActivity.this,"Could not find friends", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
 
     }
-    public void onClickAddFriend()
+    public void onClickAddFriend(View v)
     {
         Intent startActivity = new Intent(this,AddFriendActivity.class);
-        String TOKEN; // TODO Obtain token or whole User?
+        Long TOKEN = 0L; // TODO Obtain token or whole User?
         startActivity.putExtra("user", TOKEN);
         startActivity(startActivity);
     }
 
-    private MyApi getApiHandle() {
-        MyApi.Builder builder = new MyApi.Builder(AppConstants.HTTP_TRANSPORT, AppConstants.JSON_FACTORY,null);
-        builder.setRootUrl(getResources().getString(R.string.server_url));
-        builder.setApplicationName("DoryApp");
-        return builder.build();
-    }
 
     private void AddMarker(final DoryUser user) {
         MarkerOptions marker = new MarkerOptions().title(user.getFirstName()).position(new LatLng(0,0));

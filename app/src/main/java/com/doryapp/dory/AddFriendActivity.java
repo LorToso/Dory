@@ -9,6 +9,7 @@ import android.widget.SearchView;
 import com.doryapp.backend.myApi.MyApi;
 import com.doryapp.backend.myApi.model.DoryUser;
 
+import java.io.IOException;
 import java.util.List;
 
 public class AddFriendActivity extends AppCompatActivity {
@@ -19,12 +20,11 @@ public class AddFriendActivity extends AppCompatActivity {
         setContentView(R.layout.activity_addfriend);
         // TODO Obtain token through Intent
     }
-    public void onClickSearch(View v)
-    {
+    public void onClickSearch(View v) throws IOException {
         SearchView searchView  = (SearchView)v;
         CharSequence searchedName = searchView.getQuery();
-        MyApi a; // GetApi
-        List<DoryUser> matchingUsers = a.getUsersByNickName(searchedName.toString());
+        MyApi a = Api.get(this); // GetApi
+        List<DoryUser> matchingUsers = a.getUsersByNickName(searchedName.toString()).execute().getItems();
         displayUsers(matchingUsers);
     }
 
@@ -51,7 +51,7 @@ public class AddFriendActivity extends AppCompatActivity {
     }
 
     private void sendFriendRequest(DoryUser user) {
-        MyApi a;
-        a.sendFriendRequest(user.getId());
+        MyApi a = Api.get(this);
+        //a.sendFriendRequest(user.getId());
     }
 }
