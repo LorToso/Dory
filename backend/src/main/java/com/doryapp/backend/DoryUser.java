@@ -5,7 +5,7 @@ import com.googlecode.objectify.annotation.Id;
 
 @Entity
 public class DoryUser {
-    @Id Long id;
+    @Id String id;
     String nickName;
     String firstName;
     String lastName;
@@ -20,11 +20,11 @@ public class DoryUser {
         this.emailAddress = emailAddress;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

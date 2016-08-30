@@ -8,7 +8,7 @@ import com.googlecode.objectify.annotation.Id;
  */
 @Entity
 public class FriendshipRequest {
-    @Id Long id;
+    @Id String id;
     // User1 is the requesting User
     // User2 is the user that has to accept
     Friendship friendship;
@@ -21,11 +21,11 @@ public class FriendshipRequest {
         this.friendship = friendship;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

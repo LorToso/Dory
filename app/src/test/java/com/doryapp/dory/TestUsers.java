@@ -27,7 +27,7 @@ public class TestUsers {
             TestUserIds.add(i);
     }
 
-    public static DoryUser get(Long id)
+    public static DoryUser get(String id)
     {
         DoryUser user = new DoryUser();
         user.setId(id);

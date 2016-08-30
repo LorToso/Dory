@@ -5,17 +5,17 @@ import com.googlecode.objectify.annotation.Id;
 
 @Entity
 public class Location {
-    @Id Long id;
+    @Id String id;
     double longitude;
     double latitude;
     String name;
     String country;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

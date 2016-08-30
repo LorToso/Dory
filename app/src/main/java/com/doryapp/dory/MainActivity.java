@@ -28,6 +28,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.api.client.http.HttpHeaders;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
@@ -146,19 +147,19 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                     public void onComplete(@NonNull Task<GetTokenResult> task) {
                         if (task.isSuccessful()) {
 
-                            String token = task.getResult().getToken();
+                            final String token = task.getResult().getToken();
 
 
                             new AsyncTask<String, Void, List<DoryUser>>()
                             {
                                 @Override
                                 protected List<DoryUser> doInBackground(String... tokens) {
-                                    MyApi api = Api.get(MainActivity.this);
+                                    MyApi api = Api.getAuthenticated(MainActivity.this, token);
                                     List<DoryUser> users = null;
                                     try {
                                         //CharSequence s = api.test().execute();
                                         //FriendshipCollection c = api.getFriendships("123").execute();
-                                        DoryUserCollection c =api.getFriends("abc").execute();
+                                        DoryUserCollection c = api.getFriends().execute();
                                         if(c == null)
                                             return null;
                                         users = c.getItems();

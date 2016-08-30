@@ -6,6 +6,7 @@
 
 package com.doryapp.backend;
 
+import com.google.api.server.spi.auth.common.User;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
@@ -13,20 +14,12 @@ import com.google.api.server.spi.config.Named;
 import com.google.appengine.repackaged.org.joda.time.DateTime;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseToken;
-import com.google.firebase.internal.NonNull;
-import com.google.firebase.tasks.OnFailureListener;
-import com.google.firebase.tasks.OnSuccessListener;
-import com.google.firebase.tasks.Task;
-import com.google.firebase.tasks.Tasks;
 import com.googlecode.objectify.cmd.LoadType;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
@@ -34,6 +27,7 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 @Api(
   name = "myApi",
   version = "v1",
+  authenticators = {FirebaseAuthenticator.class},
   namespace = @ApiNamespace(
     ownerDomain = "backend.doryapp.com",
     ownerName = "backend.doryapp.com",
@@ -53,31 +47,29 @@ public class MyEndpoint {
 
 
     @ApiMethod(name = "getFriendships", path = "getFriendships")
-    public List<Friendship> getFriendships(@Named("uid") String uid)
+    public List<Friendship> getFriendships(User user)
     {
 
-        Long id = 0L;
-        if(id == 0L)
-            return null;
+
 
         LoadType<Friendship> loader = ofy().load().type(Friendship.class);
-        List<Friendship> friends1 = loader.filter("user1 ==", id).list();
-        List<Friendship> friends2 = loader.filter("user2 ==", id).list();
+        List<Friendship> friends1 = loader.filter("user1 ==", user.getId()).list();
+        List<Friendship> friends2 = loader.filter("user2 ==", user.getId()).list();
 
         friends1.addAll(friends2);
         return friends1;
     }
     @ApiMethod(name = "getFriends", path = "friends")
-    public List<DoryUser> getFriends(@Named("uid") String uid) {
-        Long id = 0L;
-        if(id == 0L)
+    public List<DoryUser> getFriends(User user) {
+
+        if(user == null)
             return null;
 
-        List<Friendship> friendships = getFriendships(uid);
+        List<Friendship> friendships = getFriendships(user);
         List<DoryUser> friends = new ArrayList<>();
 
         for (Friendship friendship : friendships) {
-            Long idToLoad = id.equals(friendship.getUser1()) ? friendship.getUser2() : friendship.getUser1();
+            String idToLoad = user.getId().equals(friendship.getUser1()) ? friendship.getUser2() : friendship.getUser1();
 
             DoryUser doryUser = ofy().load().type(DoryUser.class).id(idToLoad).now();
             friends.add(doryUser);
@@ -107,10 +99,10 @@ public class MyEndpoint {
     }
 
     @ApiMethod(name = "sendFriendRequest", path = "sendRequest")
-    public void sendFriendRequest(@Named("friendId") Long friendId)
+    public void sendFriendRequest(@Named("friendId") String friendId, User user)
     {
         Friendship friendship = new Friendship();
-        friendship.setUser1(0L); // TODO get own Id through authentification
+        friendship.setUser1(user.getId());
         friendship.setUser2(friendId);
         friendship.setTime(DateTime.now());
 
@@ -120,14 +112,14 @@ public class MyEndpoint {
     }
 
     @ApiMethod(name = "acceptFriendRequest", path = "acceptRequest")
-    public void acceptFriendRequest(@Named("requestID") Long requestID)
+    public void acceptFriendRequest(@Named("requestID") String requestID, User user)
     {
         FriendshipRequest request = ofy().load().type(FriendshipRequest.class).id(requestID).now();
         if(request == null)
             return;
 
         Friendship newFriendship = request.getFriendship();
-        if(newFriendship.getUser2() != 0L) // TODO get own Id thorugh authentification
+        if(!newFriendship.getUser2().equals(user.getId()))
             return;
 
         // TODO check if User1 is a valid user (Might have been deleted)
