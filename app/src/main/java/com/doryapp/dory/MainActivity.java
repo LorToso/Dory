@@ -136,6 +136,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void onShowFriends(View v)
     {
+        if(mFirebaseUser == null)
+            return;
+
         Task<GetTokenResult> task = mFirebaseUser.getToken(true)
                 .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
                     public void onComplete(@NonNull Task<GetTokenResult> task) {
