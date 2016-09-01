@@ -2,21 +2,17 @@ package com.doryapp.dory;
 
 import android.app.FragmentManager;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.doryapp.backend.myApi.MyApi;
 import com.doryapp.backend.myApi.model.DoryUser;
 import com.doryapp.backend.myApi.model.DoryUserCollection;
 import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -29,7 +25,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
 
 import java.io.IOException;
-import java.net.URI;
 import java.util.List;
 
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -68,7 +63,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         if(mFirebaseUser == null)
             showLoginUI();
 
-//(getResources().getString(R.string.firebase_url));
     }
 
     private void showLoginUI() {
@@ -100,29 +94,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         ((TextView) findViewById(R.id.TextView3)).setText(text3);
     }
 
-    public void onButtonClick(View v) {
-//        AccessToken token = AccessToken.getCurrentAccessToken();
-//
-//        if (token == null) {
-//            ChangeText("Not logged in.", "", "");
-//        } else {
-//            User.GetSelf(new User.GetUserCallback() {
-//                @Override
-//                public void onUser(User user) {
-//                    self = user;
-//                    ChangeText(
-//                            user.firstName + " " + user.lastName,
-//                            user.currentCity.currentCityName + ", " + user.currentCity.currentCityCountry,
-//                            user.currentCity.currentCityPosition.toString());
-//                    ChangePicture(user.fbProfilePicture);
-//                    ChangePosition(user.currentCity.currentCityPosition);
-//                }
-//            });
-//        }
-    }
     public void onClickRegister(View v) {
-        //mFirebaseAuth.createUserWithEmailAndPassword("testcreate@test.de", "password");
     }
+
     public void onClickLogin(View v) {
         if(mFirebaseUser != null)
             return;
@@ -139,7 +113,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         if(mFirebaseUser == null)
             return;
 
-        Task<GetTokenResult> task = mFirebaseUser.getToken(true)
+        mFirebaseUser.getToken(true)
                 .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
                     public void onComplete(@NonNull Task<GetTokenResult> task) {
                         if (!task.isSuccessful()) {
@@ -148,15 +122,14 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
                         final String token = task.getResult().getToken();
 
-                        new AsyncTask<String, Void, List<DoryUser>>()
-                        {
+                        new AsyncTask<String, Void, List<DoryUser>>() {
                             @Override
                             protected List<DoryUser> doInBackground(String... tokens) {
                                 MyApi api = Api.getAuthenticated(MainActivity.this, token);
-                                List<DoryUser> users = null;
+                                List<DoryUser> users;
                                 try {
                                     DoryUserCollection c = api.getFriends().execute();
-                                    if(c == null)
+                                    if (c == null)
                                         return null;
                                     users = c.getItems();
                                 } catch (IOException e) {
@@ -173,9 +146,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     }
     public void onClickAddFriend(View v)
     {
+        if(mFirebaseUser == null)
+            return;
         Intent startActivity = new Intent(this,AddFriendActivity.class);
-        Long TOKEN = 0L; // TODO Obtain token or whole User?
-        startActivity.putExtra("user", TOKEN);
         startActivity(startActivity);
     }
 
@@ -193,20 +166,20 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-    private void ChangePosition(final LatLng position) {
-        //AddMarker(self);
-        CameraUpdate camera = CameraUpdateFactory.newLatLngZoom(position, 10.0f);
-        googleMap.moveCamera(camera);
-    }
+//    private void ChangePosition(final LatLng position) {
+//        //AddMarker(self);
+//        CameraUpdate camera = CameraUpdateFactory.newLatLngZoom(position, 10.0f);
+//        googleMap.moveCamera(camera);
+//    }
 
-    private void ChangePicture(URI fbProfilePicture) {
-        new DownloadImageTask(new DownloadImageTask.PostDownloadAction() {
-            @Override
-            void onDownloadCompleted(Bitmap result) {
-                ((ImageView) findViewById(R.id.imageView)).setImageBitmap(result);
-            }
-        }).execute(fbProfilePicture.toString());
-    }
+//    private void ChangePicture(URI fbProfilePicture) {
+//        new DownloadImageTask(new DownloadImageTask.PostDownloadAction() {
+//            @Override
+//            void onDownloadCompleted(Bitmap result) {
+//                ((ImageView) findViewById(R.id.imageView)).setImageBitmap(result);
+//            }
+//        }).execute(fbProfilePicture.toString());
+//    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {

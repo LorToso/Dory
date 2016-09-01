@@ -3,9 +3,15 @@ package com.doryapp.dory;
 import android.content.Context;
 
 import com.doryapp.backend.myApi.MyApi;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
@@ -35,4 +41,6 @@ public class Api {
         builder.setApplicationName("DoryApp");
         return builder.build();
     }
+
+
 }

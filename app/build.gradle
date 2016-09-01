@@ -35,4 +35,5 @@ dependencies {
     testCompile 'com.google.appengine:appengine-endpoints:1.9.42'
 
     compile project(path: ':backend', configuration: 'android-endpoints')
+    compile 'org.jetbrains:annotations-java5:15.0'
 }

@@ -1,5 +1,6 @@
 package com.doryapp.dory;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,11 +15,11 @@ import java.util.List;
 
 public class AddFriendActivity extends AppCompatActivity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addfriend);
-        // TODO Obtain token through Intent
     }
     public void onClickSearch(View v) throws IOException {
         SearchView searchView  = (SearchView)v;
@@ -37,7 +38,7 @@ public class AddFriendActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 UserDetailsView detailsView = (UserDetailsView)view;
-                sendFriendRequest(detailsView.getUser());
+                sendFriendRequestTo(detailsView.getUser());
             }
         };
 
@@ -50,8 +51,7 @@ public class AddFriendActivity extends AppCompatActivity {
 
     }
 
-    private void sendFriendRequest(DoryUser user) {
-        MyApi a = Api.get(this);
-        //a.sendFriendRequest(user.getId());
+    private void sendFriendRequestTo(DoryUser user) {
+        new SendFriendRequestCall(this, user.getId()).execute();
     }
 }
