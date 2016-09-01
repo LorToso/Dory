@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.doryapp.backend.myApi.MyApi;
 import com.doryapp.backend.myApi.model.DoryUser;
 import com.doryapp.backend.myApi.model.DoryUserCollection;
+import com.doryapp.dory.apiCalls.AsyncApiCall;
+import com.doryapp.dory.apiCalls.DoesUserExistCall;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -70,11 +72,21 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
                         .setProviders(
-                                AuthUI.EMAIL_PROVIDER/*,
+                                AuthUI.EMAIL_PROVIDER,
                                 AuthUI.GOOGLE_PROVIDER,
-                                AuthUI.FACEBOOK_PROVIDER*/)
+                                AuthUI.FACEBOOK_PROVIDER)
                         .build(),
                 0);//RC_SIGN_IN);
+
+        new DoesUserExistCall(this, mFirebaseUser.getUid(), new AsyncApiCall.OnComplete<Boolean>() {
+            @Override
+            public void execute(Boolean userExists) {
+                if(userExists)
+                   return;
+                Intent startActivity = new Intent(MainActivity.this,CreateUserActivity.class);
+                startActivity(startActivity);
+            }
+        }).execute();
     }
 
     private void setupGoogleMap() {

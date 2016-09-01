@@ -11,6 +11,7 @@ import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 import com.google.api.server.spi.config.Named;
+import com.google.appengine.repackaged.org.codehaus.jackson.map.ser.std.StdArraySerializers;
 import com.google.appengine.repackaged.org.joda.time.DateTime;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
@@ -143,6 +144,15 @@ public class MyEndpoint {
 
         ofy().delete().type(FriendshipRequest.class).id(requestID).now();
     }
+
+    @ApiMethod(name = "doesUserExist", path = "userExist")
+    public BoxedBool doesUserExist(@Named("userID") String userId)
+    {
+        DoryUser user = ofy().load().type(DoryUser.class).id(userId).now();
+
+        return new BoxedBool(user != null);
+    }
+
 
 
 }

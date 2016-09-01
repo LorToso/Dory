@@ -1,4 +1,4 @@
-package com.doryapp.dory;
+package com.doryapp.dory.apiCalls;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,4 +39,9 @@ public abstract class AsyncApiCall {
         getTokenAndPerformCall();
     }
     protected abstract void performCall(String token) throws IOException;
+
+    public interface OnComplete<ParameterType>
+    {
+        void execute(ParameterType param);
+    }
 }

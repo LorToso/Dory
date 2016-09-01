@@ -1,8 +1,9 @@
-package com.doryapp.dory;
+package com.doryapp.dory.apiCalls;
 
 import android.content.Context;
 
 import com.doryapp.backend.myApi.MyApi;
+import com.doryapp.dory.Api;
 
 import java.io.IOException;
 
