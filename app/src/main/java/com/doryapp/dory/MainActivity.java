@@ -2,31 +2,25 @@ package com.doryapp.dory;
 
 import android.app.FragmentManager;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.TextView;
 
-import com.doryapp.backend.myApi.MyApi;
 import com.doryapp.backend.myApi.model.DoryUser;
-import com.doryapp.backend.myApi.model.DoryUserCollection;
 import com.doryapp.dory.apiCalls.AsyncApiCall;
 import com.doryapp.dory.apiCalls.DoesUserExistCall;
+import com.doryapp.dory.apiCalls.GetFriendsCall;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GetTokenResult;
 
-import java.io.IOException;
 import java.util.List;
 
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -122,39 +116,12 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void onShowFriends(View v)
     {
-        if(mFirebaseUser == null)
-            return;
-
-        mFirebaseUser.getToken(true)
-                .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-                    public void onComplete(@NonNull Task<GetTokenResult> task) {
-                        if (!task.isSuccessful()) {
-                            return;
-                        }
-
-                        final String token = task.getResult().getToken();
-
-                        new AsyncTask<String, Void, List<DoryUser>>() {
-                            @Override
-                            protected List<DoryUser> doInBackground(String... tokens) {
-                                MyApi api = Api.getAuthenticated(MainActivity.this, token);
-                                List<DoryUser> users;
-                                try {
-                                    DoryUserCollection c = api.getFriends().execute();
-                                    if (c == null)
-                                        return null;
-                                    users = c.getItems();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                    return null;
-                                }
-//                                    Toast.makeText(MainActivity.this,"worked!", Toast.LENGTH_LONG).show();
-                                return users;
-                            }
-                        }.execute(token);
-                    }
-                });
-
+        new GetFriendsCall(this, new AsyncApiCall.OnComplete<List<DoryUser>>() {
+            @Override
+            public void execute(List<DoryUser> param) {
+                // TODO
+            }
+        }).execute();
     }
     public void onClickAddFriend(View v)
     {
