@@ -11,7 +11,6 @@ import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 import com.google.api.server.spi.config.Named;
-import com.google.appengine.repackaged.org.codehaus.jackson.map.ser.std.StdArraySerializers;
 import com.google.appengine.repackaged.org.joda.time.DateTime;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
@@ -42,7 +41,6 @@ public class MyEndpoint {
     static
     {
         ObjectifyService.register(Friendship.class);
-
     }
 
     public MyEndpoint() throws FileNotFoundException {
@@ -57,9 +55,6 @@ public class MyEndpoint {
     @ApiMethod(name = "getFriendships", path = "getFriendships")
     public List<Friendship> getFriendships(User user)
     {
-
-
-
         LoadType<Friendship> loader = ofy().load().type(Friendship.class);
         List<Friendship> friends1 = loader.filter("user1 ==", user.getId()).list();
         List<Friendship> friends2 = loader.filter("user2 ==", user.getId()).list();
@@ -153,6 +148,20 @@ public class MyEndpoint {
         return new BoxedBool(user != null);
     }
 
+    @ApiMethod(name = "createUser", path = "createUser", httpMethod = ApiMethod.HttpMethod.POST)
+    public BoxedBool createUser(@Named("id") String id, @Named("nickName") String nickName, @Named("firstName") String firstName, @Named("lastName") String lastName, Location currentCity)
+    {
+        DoryUser user = new DoryUser();
 
+        user.setId(id);
+        user.setNickName(nickName);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setLocation(currentCity);
+
+        ofy().save().entity(user).now();
+
+        return new BoxedBool(true);
+    }
 
 }

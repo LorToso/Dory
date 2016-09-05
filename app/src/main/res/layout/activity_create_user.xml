@@ -29,7 +29,7 @@
             android:inputType="textPersonName"
             android:text="Name"
             android:ems="10"
-            android:id="@+id/editText" />
+            android:id="@+id/nickNameView" />
     </LinearLayout>
 
     <LinearLayout
@@ -49,7 +49,7 @@
             android:inputType="textPersonName"
             android:text="Name"
             android:ems="10"
-            android:id="@+id/editText2" />
+            android:id="@+id/firstNameView" />
     </LinearLayout>
 
     <LinearLayout
@@ -69,7 +69,7 @@
             android:inputType="textPersonName"
             android:text="Name"
             android:ems="10"
-            android:id="@+id/editText3" />
+            android:id="@+id/lastNameView" />
     </LinearLayout>
 
     <LinearLayout
@@ -89,7 +89,7 @@
             android:inputType="textPersonName"
             android:text="Name"
             android:ems="10"
-            android:id="@+id/editText5" />
+            android:id="@+id/currentCityView" />
     </LinearLayout>
 
     <LinearLayout
@@ -109,7 +109,7 @@
             android:inputType="textPersonName"
             android:text="Name"
             android:ems="10"
-            android:id="@+id/editText4" />
+            android:id="@+id/profilePictureView" />
     </LinearLayout>
 
     <Button
