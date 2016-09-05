@@ -145,7 +145,7 @@ public class MyEndpoint {
         ofy().delete().type(FriendshipRequest.class).id(requestID).now();
     }
 
-    @ApiMethod(name = "doesUserExist", path = "userExist")
+    @ApiMethod(name = "doesUserExist", path = "userExist", httpMethod = ApiMethod.HttpMethod.GET)
     public BoxedBool doesUserExist(@Named("userID") String userId)
     {
         DoryUser user = ofy().load().type(DoryUser.class).id(userId).now();

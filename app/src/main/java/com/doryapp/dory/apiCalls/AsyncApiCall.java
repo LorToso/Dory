@@ -1,6 +1,10 @@
 package com.doryapp.dory.apiCalls;
 
+import android.os.AsyncTask;
+
+import com.doryapp.dory.AsyncExecutor;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
@@ -14,18 +18,24 @@ public abstract class AsyncApiCall {
 
     private void getTokenAndPerformCall()
     {
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        if(auth == null)
-            throw new IllegalStateException("FirebaseAuth is null");
-
-        FirebaseUser user = auth.getCurrentUser();
-        if(user == null)
-            throw new IllegalStateException("No user logged in");
-
-        user.getToken(true).addOnSuccessListener(new OnSuccessListener<GetTokenResult>() {
+        AsyncTask.execute(new Runnable() {
             @Override
-            public void onSuccess(GetTokenResult getTokenResult) {
-                String token = getTokenResult.getToken();
+            public void run() {
+                FirebaseAuth auth = FirebaseAuth.getInstance();
+                if(auth == null)
+                    throw new IllegalStateException("FirebaseAuth is null");
+
+                final FirebaseUser user = auth.getCurrentUser();
+                if(user == null)
+                    throw new IllegalStateException("No user logged in");
+
+
+                Task<GetTokenResult> tokenTask = user.getToken(false);
+
+                GetTokenResult tokenResult = tokenTask.getResult();
+                if(tokenResult == null)
+                    return;
+                String token = tokenResult.getToken();
                 try {
                     performCall(token);
                 } catch (IOException e) {

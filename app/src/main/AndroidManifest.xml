@@ -16,7 +16,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,8 +34,8 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_app_id" />
 
-        <activity android:name=".AddFriendActivity" />
-        <activity android:name=".CreateUserActivity"></activity>
+        <activity android:name=".activities.AddFriendActivity" />
+        <activity android:name=".activities.CreateUserActivity"></activity>
     </application>
 
 </manifest>
