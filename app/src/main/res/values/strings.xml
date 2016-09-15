@@ -15,5 +15,7 @@
     <!--<string name="server_url">http://192.168.178.137:8080/_ah/api</string>-->
     <!--<string name="server_url">http://localhost:8080/_ah/api</string>-->
     <string name="server_url">http://192.168.43.148:8080/_ah/api</string>
+
     <integer name="create_user_request_code">1234</integer>
+    <integer name="login_request_code">1580</integer>
 </resources>
