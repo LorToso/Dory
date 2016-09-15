@@ -1,6 +1,5 @@
 package com.doryapp.dory.apiCalls;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.android.gms.tasks.Task;
@@ -45,6 +44,8 @@ public abstract class AuthedApiCall extends ApiCall{
                 try {
                     performCall(token);
                 } catch (IOException e) {
+                    // TODO Toast from different Thread or sth?
+                    Log.e("performingAsyncCall", e.getLocalizedMessage());
                     return;
                 }
             }

@@ -3,16 +3,13 @@ package com.doryapp.dory;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.doryapp.backend.myApi.model.DoryUser;
 
-/**
- * Created by Lorenzo Toso on 29.08.2016.
- */
+
 public class UserDetailsView extends LinearLayout{
 
     protected DoryUser user;
@@ -66,7 +63,11 @@ public class UserDetailsView extends LinearLayout{
     private void setupLocationView(Context context, DoryUser user) {
         TextView locationView = new TextView(context);
         locationView.setTextColor(Color.GRAY);
-        locationView.setText(user.getLocation().getName() + ", " + user.getLocation().getCountry());
+
+        if(user.getLocation() != null)
+            locationView.setText(user.getLocation().getName() + ", " + user.getLocation().getCountry());
+        else
+            locationView.setText("LOCATION MISSING!"); // TODO this is a bit ugly, isnt it?
     }
 
 }
