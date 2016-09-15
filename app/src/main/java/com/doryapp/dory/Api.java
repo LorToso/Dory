@@ -3,43 +3,47 @@ package com.doryapp.dory;
 import android.content.Context;
 
 import com.doryapp.backend.myApi.MyApi;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GetTokenResult;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
-/**
- * Created by Lorenzo Toso on 30.08.2016.
- */
 public class Api {
 
-    public static MyApi get(Context context)
-    {
-        MyApi.Builder builder = new MyApi.Builder(AppConstants.HTTP_TRANSPORT, AppConstants.JSON_FACTORY,null);
-        builder.setRootUrl(context.getString(R.string.server_url));
+
+    public static MyApi get(Context context) {
+        return get(context.getString(R.string.server_url));
+    }
+
+    public static MyApi getAuthenticated(Context context, String token) {
+        return getAuthenticated(context.getString(R.string.server_url), token);
+    }
+
+    public static MyApi get(String serverURL) {
+        return finalizeBuilder(null, serverURL);
+    }
+
+    public static MyApi getAuthenticated(String serverURL, String token) {
+        return finalizeBuilder(getAuthenticationInitializer(token), serverURL);
+    }
+
+
+
+    private static MyApi finalizeBuilder(HttpRequestInitializer initializer, String serverURL) {
+        MyApi.Builder builder = new MyApi.Builder(AppConstants.HTTP_TRANSPORT, AppConstants.JSON_FACTORY, initializer);
+        builder.setRootUrl(serverURL);
         builder.setApplicationName("DoryApp");
         return builder.build();
     }
-    public static MyApi getAuthenticated(Context context, final String token)
-    {
-        HttpRequestInitializer initializer = new HttpRequestInitializer() {
+
+    private static HttpRequestInitializer getAuthenticationInitializer(final String token) {
+        return new HttpRequestInitializer() {
             @Override
             public void initialize(HttpRequest request) throws IOException {
                 request.setHeaders(new HttpHeaders().setAuthorization(token));
             }
         };
-
-        MyApi.Builder builder = new MyApi.Builder(AppConstants.HTTP_TRANSPORT, AppConstants.JSON_FACTORY, initializer);
-        builder.setRootUrl(context.getString(R.string.server_url));
-        builder.setApplicationName("DoryApp");
-        return builder.build();
     }
 
 

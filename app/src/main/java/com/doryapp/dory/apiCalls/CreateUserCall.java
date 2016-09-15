@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * Created by Lorenzo Toso on 05.09.2016.
  */
-public class CreateUserCall extends AsyncApiCall{
+public class CreateUserCall extends AuthedApiCall {
 
     private DoryUser user;
     private Context context;
@@ -25,6 +25,6 @@ public class CreateUserCall extends AsyncApiCall{
     @Override
     protected void performCall(String token) throws IOException {
         MyApi api = Api.getAuthenticated(context,token);
-        api.createUser(user.getFirstName(),user.getId(),user.getLastName(),user.getNickName(),user.getLocation());
+        api.createUser(user.getFirstName(),user.getLastName(),user.getNickName()).execute();//,user.getLocation());
     }
 }

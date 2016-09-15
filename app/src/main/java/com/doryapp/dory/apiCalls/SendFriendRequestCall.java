@@ -10,7 +10,7 @@ import java.io.IOException;
 /**
  * Created by Lorenzo Toso on 01.09.2016.
  */
-public class SendFriendRequestCall extends AsyncApiCall{
+public class SendFriendRequestCall extends AuthedApiCall {
 
     private String otherUserId;
     private Context context;

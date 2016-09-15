@@ -41,6 +41,7 @@ public class MyEndpoint {
     static
     {
         ObjectifyService.register(Friendship.class);
+        ObjectifyService.register(DoryUser.class);
     }
 
     public MyEndpoint() throws FileNotFoundException {
@@ -140,7 +141,7 @@ public class MyEndpoint {
         ofy().delete().type(FriendshipRequest.class).id(requestID).now();
     }
 
-    @ApiMethod(name = "doesUserExist", path = "userExist", httpMethod = ApiMethod.HttpMethod.GET)
+    @ApiMethod(name = "doesUserExist", httpMethod = ApiMethod.HttpMethod.GET)
     public BoxedBool doesUserExist(@Named("userID") String userId)
     {
         DoryUser user = ofy().load().type(DoryUser.class).id(userId).now();
@@ -148,16 +149,20 @@ public class MyEndpoint {
         return new BoxedBool(user != null);
     }
 
-    @ApiMethod(name = "createUser", path = "createUser", httpMethod = ApiMethod.HttpMethod.POST)
-    public BoxedBool createUser(@Named("id") String id, @Named("nickName") String nickName, @Named("firstName") String firstName, @Named("lastName") String lastName, Location currentCity)
+    @ApiMethod(name = "createUser", path = "createNewUser", httpMethod = ApiMethod.HttpMethod.GET)
+    public BoxedBool createUser(@Named("nickName") String nickName, @Named("firstName") String firstName, @Named("lastName") String lastName, User authUser)//, Location currentCity)
     {
+        if(authUser == null)
+            return new BoxedBool(false);
+            //authUser = new User("id","test@test,de");
+
         DoryUser user = new DoryUser();
 
-        user.setId(id);
+        user.setId(authUser.getId());
         user.setNickName(nickName);
         user.setFirstName(firstName);
         user.setLastName(lastName);
-        user.setLocation(currentCity);
+        //user.setLocation(currentCity);
 
         ofy().save().entity(user).now();
 

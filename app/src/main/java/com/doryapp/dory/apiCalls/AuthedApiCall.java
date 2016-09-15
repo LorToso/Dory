@@ -1,24 +1,22 @@
 package com.doryapp.dory.apiCalls;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
-import com.doryapp.dory.AsyncExecutor;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
-/**
- * Created by Lorenzo Toso on 01.09.2016.
- */
-public abstract class AsyncApiCall {
+public abstract class AuthedApiCall extends ApiCall{
 
-    private void getTokenAndPerformCall()
+    public AuthedApiCall()
     {
-        AsyncTask.execute(new Runnable() {
+        call = new Runnable() {
             @Override
             public void run() {
                 FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -32,7 +30,15 @@ public abstract class AsyncApiCall {
 
                 Task<GetTokenResult> tokenTask = user.getToken(false);
 
-                GetTokenResult tokenResult = tokenTask.getResult();
+                GetTokenResult tokenResult;
+
+                try {
+                    tokenResult = Tasks.await(tokenTask);
+                } catch (ExecutionException | InterruptedException e) {
+                    Log.e("Awaiting GetTokenResult", e.getLocalizedMessage());
+                    return;
+                }
+
                 if(tokenResult == null)
                     return;
                 String token = tokenResult.getToken();
@@ -42,16 +48,9 @@ public abstract class AsyncApiCall {
                     return;
                 }
             }
-        });
+        };
     }
-    public void execute()
-    {
-        getTokenAndPerformCall();
-    }
-    protected abstract void performCall(String token) throws IOException;
 
-    public interface OnComplete<ParameterType>
-    {
-        void execute(ParameterType param);
-    }
+
+    protected abstract void performCall(String token) throws IOException;
 }

@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * Created by Lorenzo Toso on 01.09.2016.
  */
-public class DoesUserExistCall extends AsyncApiCall {
+public class DoesUserExistCall extends SimpleApiCall {
 
 
     private String userId;
@@ -26,8 +26,8 @@ public class DoesUserExistCall extends AsyncApiCall {
     }
 
     @Override
-    protected void performCall(String token) throws IOException {
-        MyApi api = Api.getAuthenticated(context,token);
+    protected void performCall() throws IOException {
+        MyApi api = Api.get(context);
         BoxedBool bool = api.doesUserExist(userId).execute();
         onComplete.execute(bool.getValid());
     }
