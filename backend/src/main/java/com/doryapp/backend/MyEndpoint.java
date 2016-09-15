@@ -105,6 +105,11 @@ public class MyEndpoint {
     @ApiMethod(name = "sendFriendRequest", path = "sendRequest")
     public void sendFriendRequest(@Named("friendId") String friendId, User user)
     {
+        if(user == null)
+            return;
+        if(user.getId() == friendId)
+            return;
+
         Friendship friendship = new Friendship();
         friendship.setUser1(user.getId());
         friendship.setUser2(friendId);
