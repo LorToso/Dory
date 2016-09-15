@@ -6,6 +6,7 @@
 
 package com.doryapp.backend;
 
+import com.doryapp.backend.myApi.MyApi;
 import com.google.api.server.spi.auth.common.User;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
@@ -14,6 +15,7 @@ import com.google.api.server.spi.config.Named;
 import com.google.appengine.repackaged.org.joda.time.DateTime;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.cmd.LoadType;
 
@@ -131,16 +133,32 @@ public class MyEndpoint {
         if(!newFriendship.getUser2().equals(user.getId()))
             return;
 
-        // TODO check if User1 is a valid user (Might have been deleted)
-        ofy().save().entity(newFriendship).now();
-        ofy().delete().type(FriendshipRequest.class).id(requestID).now();
+        if(doesUserExist(newFriendship.getUser1()).valid)
+            safeUser(newFriendship);
+
+        deleteUser(requestID);
+    }
+
+    private Key<Friendship> safeUser(Friendship newFriendship) {
+        return ofy().save().entity(newFriendship).now();
+    }
+
+    private Void deleteUser(@Named("requestID") String requestID) {
+        return ofy().delete().type(FriendshipRequest.class).id(requestID).now();
     }
 
     @ApiMethod(name = "ignoreFriendRequest", path = "ignoreRequest")
-    public void ignoreFriendRequest(@Named("requestID") Long requestID)
+    public void ignoreFriendRequest(@Named("requestID") Long requestID, User user)
     {
+        if(user == null)
+            return;
+
         FriendshipRequest request = ofy().load().type(FriendshipRequest.class).id(requestID).now();
+
         if(request == null)
+            return;
+
+        if(request.getFriendship().getUser1() != user.getId() && request.getFriendship().getUser2() != user.getId())
             return;
 
         ofy().delete().type(FriendshipRequest.class).id(requestID).now();
