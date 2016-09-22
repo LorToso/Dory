@@ -33,8 +33,7 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
   authenticators = {FirebaseAuthenticator.class},
   namespace = @ApiNamespace(
     ownerDomain = "backend.doryapp.com",
-    ownerName = "backend.doryapp.com",
-    packagePath=""
+    ownerName = "backend.doryapp.com"
   )
 )
 public class MyEndpoint {
@@ -107,7 +106,7 @@ public class MyEndpoint {
     {
         if(user == null)
             return;
-        if(user.getId() == friendId)
+        if(user.getId().equals(friendId))
             return;
 
         Friendship friendship = new Friendship();
@@ -156,7 +155,8 @@ public class MyEndpoint {
         if(request == null)
             return;
 
-        if(request.getFriendship().getUser1() != user.getId() && request.getFriendship().getUser2() != user.getId())
+        if(     !request.getFriendship().getUser1().equals(user.getId()) &&
+                !request.getFriendship().getUser2().equals(user.getId()))
             return;
 
         ofy().delete().type(FriendshipRequest.class).id(requestID).now();
@@ -183,6 +183,7 @@ public class MyEndpoint {
         user.setNickName(nickName);
         user.setFirstName(firstName);
         user.setLastName(lastName);
+        user.setEmailAddress(authUser.getEmail());
         //user.setLocation(currentCity);
 
         ofy().save().entity(user).now();
