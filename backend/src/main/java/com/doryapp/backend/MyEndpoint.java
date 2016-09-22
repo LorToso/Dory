@@ -6,7 +6,6 @@
 
 package com.doryapp.backend;
 
-import com.doryapp.backend.myApi.MyApi;
 import com.google.api.server.spi.auth.common.User;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
@@ -89,7 +88,6 @@ public class MyEndpoint {
         List<DoryUser> allUsers = ofy().load().type(DoryUser.class).list();
         List<DoryUser> foundUsers = new ArrayList<>();
 
-        // TODO: Lookup how .filter works
         for (DoryUser user : allUsers) {
             if (user.getNickName().contains(searchedName))
                 foundUsers.add(user);
