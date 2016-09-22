@@ -29,6 +29,12 @@ Have you ever travelled to a different city, maybe even a different country and 
 - Fail miserably and ask me (Lo) how to fix it
 - Do whatever I say
 
+It works when you see this:
+
+<p align="center">
+  <img src="http://i.imgur.com/2YVDybO.png" width="150"/>
+</p>
+
 ## Project structure
 This repository contains two separate things:
 - The server backend (folder "backend")
