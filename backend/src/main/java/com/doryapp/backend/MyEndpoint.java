@@ -86,9 +86,11 @@ public class MyEndpoint {
         // TODO: Can be exploited to retrieve all email addresses?
         List<DoryUser> allUsers = ofy().load().type(DoryUser.class).list();
         List<DoryUser> foundUsers = new ArrayList<>();
+        searchedName = searchedName.toLowerCase();
 
         for (DoryUser user : allUsers) {
-            if (user.getNickName().contains(searchedName))
+            String nick = user.getNickName().toLowerCase();
+            if (nick.contains(searchedName))
                 foundUsers.add(user);
         }
 

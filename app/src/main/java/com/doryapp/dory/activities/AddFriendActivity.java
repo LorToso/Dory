@@ -80,15 +80,6 @@ public class AddFriendActivity extends AppCompatActivity {
         findUsersWithFilter(searchedName.toString());
     }
 
-    private void filterBy(CharSequence searchedName) {
-        List<DoryUser> newList = new ArrayList<>();
-        for (DoryUser user : displayedUsers) {
-            if(user.getNickName().contains(searchedName))
-                newList.add(user);
-        }
-        displayedUsers = newList;
-    }
-
     private void displayUsers() {
         LinearLayout view = (LinearLayout)findViewById(R.id.userListView);
 
