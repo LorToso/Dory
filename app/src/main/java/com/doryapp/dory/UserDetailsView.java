@@ -9,10 +9,13 @@ import android.widget.TextView;
 
 import com.doryapp.backend.myApi.model.DoryUser;
 
+import static com.doryapp.dory.R.mipmap.ic_no_profile_picture;
+
 
 public class UserDetailsView extends LinearLayout{
 
     protected DoryUser user;
+    private ImageView profileView;
 
     public UserDetailsView(Context context, DoryUser user) {
         super(context);
@@ -28,7 +31,7 @@ public class UserDetailsView extends LinearLayout{
     protected void setupUserDetailsView(Context context, DoryUser user) {
         removeAllViews();
 
-        setOrientation(LinearLayout.VERTICAL);
+        setOrientation(LinearLayout.HORIZONTAL);
 
         ImageView profilePicture = setupProfilePictureView(context);
         addView(profilePicture);
@@ -40,17 +43,20 @@ public class UserDetailsView extends LinearLayout{
     @NonNull
     private LinearLayout setupDetailsView(Context context, DoryUser user) {
         LinearLayout detailsLayout = new LinearLayout(context);
-        detailsLayout.setOrientation(LinearLayout.HORIZONTAL);
+        detailsLayout.setOrientation(LinearLayout.VERTICAL);
 
         TextView nameView = setupNameView(context, user);
-        setupLocationView(context, user);
+        TextView locationView = setupLocationView(context, user);
         detailsLayout.addView(nameView);
+        detailsLayout.addView(locationView);
         return detailsLayout;
     }
 
     @NonNull
     private ImageView setupProfilePictureView(Context context) {
-        return new ImageView(context);
+        profileView = new ImageView(context);
+        profileView.setBackgroundResource(ic_no_profile_picture);
+        return profileView;
     }
 
     @NonNull
@@ -60,7 +66,7 @@ public class UserDetailsView extends LinearLayout{
         return nameView;
     }
 
-    private void setupLocationView(Context context, DoryUser user) {
+    private TextView setupLocationView(Context context, DoryUser user) {
         TextView locationView = new TextView(context);
         locationView.setTextColor(Color.GRAY);
 
@@ -68,6 +74,11 @@ public class UserDetailsView extends LinearLayout{
             locationView.setText(user.getLocation().getName() + ", " + user.getLocation().getCountry());
         else
             locationView.setText("LOCATION MISSING!"); // TODO this is a bit ugly, isnt it?
+        return locationView;
     }
 
+    public ImageView getProfileView()
+    {
+        return profileView;
+    }
 }

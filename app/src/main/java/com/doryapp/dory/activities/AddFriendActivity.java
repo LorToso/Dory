@@ -95,7 +95,14 @@ public class AddFriendActivity extends AppCompatActivity {
         if(view.getChildCount() > 0)
             view.removeAllViews();
 
-        View.OnClickListener OnUserClicked = new View.OnClickListener() {
+        View.OnClickListener SendFriendRequest = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UserDetailsView detailsView = (UserDetailsView)view;
+                sendFriendRequestTo(detailsView.getUser());
+            }
+        };
+        View.OnClickListener ShowProfile = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 UserDetailsView detailsView = (UserDetailsView)view;
@@ -106,7 +113,8 @@ public class AddFriendActivity extends AppCompatActivity {
         for(DoryUser user : displayedUsers)
         {
             UserDetailsViewWithAddButton detailsView = new UserDetailsViewWithAddButton(this, user);
-            detailsView.setOnClickListener(OnUserClicked);
+            detailsView.setOnClickListener(SendFriendRequest);  // TODO This does not work because the View does not handle touch events
+            detailsView.getProfileView().setOnClickListener(ShowProfile); // TODO This doesn't work yet because the image does not contain the user information
             view.addView(detailsView);
         }
 

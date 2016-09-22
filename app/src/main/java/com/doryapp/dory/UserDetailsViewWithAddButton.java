@@ -1,6 +1,9 @@
 package com.doryapp.dory;
 
 import android.content.Context;
+import android.graphics.Rect;
+import android.view.Gravity;
+import android.view.TouchDelegate;
 import android.view.View;
 import android.widget.Button;
 
@@ -24,6 +27,8 @@ public class UserDetailsViewWithAddButton extends UserDetailsView {
             }
         }
     };
+    Button addButton;
+
 
 
     public UserDetailsViewWithAddButton(Context context, DoryUser user) {
@@ -37,11 +42,12 @@ public class UserDetailsViewWithAddButton extends UserDetailsView {
     }
 
     private void setupAddButton(Context context) {
-        Button btn = new Button(context);
-        btn.setOnClickListener(listener);
-        btn.setText("ADD");
-        addView(btn);
+        addButton = new Button(context);
+        addButton.setOnClickListener(listener);
+        addButton.setText("ADD");
+        addView(addButton);
     }
+
     public void setOnClickListener(OnClickListener listener)
     {
         clickListeners.clear();
