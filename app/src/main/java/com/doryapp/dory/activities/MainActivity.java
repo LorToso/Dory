@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.doryapp.backend.myApi.model.DoryUser;
 import com.doryapp.backend.myApi.model.Location;
@@ -50,7 +51,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 mFirebaseUser = firebaseAuth.getCurrentUser();
-
                 applyTextChangesBasedOnLoggedInUser();
             }
         });
@@ -117,6 +117,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         if (resultCode != RESULT_OK)
             return;
 
+        Toast.makeText(this,"User will be created", Toast.LENGTH_LONG).show();
 
         DoryUser user = new DoryUser();
         user.setId(mFirebaseUser.getUid());
