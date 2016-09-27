@@ -103,7 +103,7 @@ public class MyEndpoint {
         return "test";
     }
 
-    @ApiMethod(name = "sendFriendRequest", path = "sendRequest")
+    @ApiMethod(name = "sendFriendRequest", path = "sendRequest", httpMethod = ApiMethod.HttpMethod.GET)
     public void sendFriendRequest(@Named("friendId") String friendId, User user)
     {
         if(user == null)
