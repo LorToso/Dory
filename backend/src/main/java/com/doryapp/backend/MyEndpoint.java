@@ -103,6 +103,7 @@ public class MyEndpoint {
         return "test";
     }
 
+    // This method should be a POST-Type, but since that appears to be bugged (Throws HTTP 500) it is set as GET instead
     @ApiMethod(name = "sendFriendRequest", path = "sendRequest", httpMethod = ApiMethod.HttpMethod.GET)
     public void sendFriendRequest(@Named("friendId") String friendId, User user)
     {
@@ -172,6 +173,7 @@ public class MyEndpoint {
         return new BoxedBool(user != null);
     }
 
+    // This method should be a POST-Type, but since that appears to be bugged (Throws HTTP 500) it is set as GET instead
     @ApiMethod(name = "createUser", path = "createNewUser", httpMethod = ApiMethod.HttpMethod.GET)
     public BoxedBool createUser(@Named("nickName") String nickName, @Named("firstName") String firstName, @Named("lastName") String lastName, User authUser)//, Location currentCity)
     {
