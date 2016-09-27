@@ -112,11 +112,9 @@ public class AddFriendActivity extends AppCompatActivity {
 
     private void showProfile(DoryUser user) {
         Intent startActivity = new Intent(this,UserProfileActivity.class);
+        startActivity.putExtra("user", new Gson().toJson(user));
 
-        Bundle extras = new Bundle();
-        extras.putString("user", new Gson().toJson(user));
-
-        startActivity(startActivity, extras);
+        startActivity(startActivity);
     }
 
     private void sendFriendRequestTo(DoryUser user) {

@@ -3,6 +3,8 @@ package com.doryapp.dory.activities;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 
 import com.doryapp.backend.myApi.model.DoryUser;
 import com.doryapp.dory.R;
@@ -24,6 +26,24 @@ public class UserProfileActivity extends AppCompatActivity {
             return;
 
         user = new Gson().fromJson(userJson, DoryUser.class);
-        int i = 0;
+    }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+        if(user == null)
+            return;
+
+        TextView nameView = (TextView)findViewById(R.id.nameView);
+        nameView.setText(user.getFirstName() + " " + user.getLastName());
+
+        TextView locationView = (TextView)findViewById(R.id.locationView);
+        locationView.setText(user.getLocation() == null ? "NO LOCATION SET" : user.getLocation().getName());
+    }
+
+    public void onClickOK(View v)
+    {
+        finish();
     }
 }
