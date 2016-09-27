@@ -1,4 +1,4 @@
-package com.doryapp.dory;
+package com.doryapp.dory.extendedViews;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -15,7 +15,7 @@ import static com.doryapp.dory.R.mipmap.ic_no_profile_picture;
 public class UserDetailsView extends LinearLayout{
 
     protected DoryUser user;
-    private ImageView profileView;
+    private UserPictureView profileView;
 
     public UserDetailsView(Context context, DoryUser user) {
         super(context);
@@ -54,8 +54,7 @@ public class UserDetailsView extends LinearLayout{
 
     @NonNull
     private ImageView setupProfilePictureView(Context context) {
-        profileView = new ImageView(context);
-        profileView.setBackgroundResource(ic_no_profile_picture);
+        profileView = new UserPictureView(context, user);
         return profileView;
     }
 
@@ -77,6 +76,10 @@ public class UserDetailsView extends LinearLayout{
         return locationView;
     }
 
+    public void setPictureClickListener(OnClickListener listener)
+    {
+        profileView.setOnClickListener(listener);
+    }
     public ImageView getProfileView()
     {
         return profileView;

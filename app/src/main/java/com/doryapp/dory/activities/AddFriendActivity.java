@@ -1,25 +1,24 @@
 package com.doryapp.dory.activities;
 
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.SearchView;
 
 import com.doryapp.backend.myApi.model.DoryUser;
 import com.doryapp.dory.R;
-import com.doryapp.dory.UserDetailsView;
-import com.doryapp.dory.UserDetailsViewWithAddButton;
+import com.doryapp.dory.extendedViews.UserButton;
+import com.doryapp.dory.extendedViews.UserDetailsViewWithAddButton;
 import com.doryapp.dory.apiCalls.ApiCall;
-import com.doryapp.dory.apiCalls.GetFriendsCall;
 import com.doryapp.dory.apiCalls.GetUsersCall;
 import com.doryapp.dory.apiCalls.SendFriendRequestCall;
+import com.doryapp.dory.extendedViews.UserPictureView;
+import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -89,26 +88,35 @@ public class AddFriendActivity extends AppCompatActivity {
         View.OnClickListener SendFriendRequest = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                UserDetailsView detailsView = (UserDetailsView)view;
+                UserButton detailsView = (UserButton)view;
                 sendFriendRequestTo(detailsView.getUser());
             }
         };
         View.OnClickListener ShowProfile = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                UserDetailsView detailsView = (UserDetailsView)view;
-                sendFriendRequestTo(detailsView.getUser());
+                UserPictureView pictureView = (UserPictureView)view;
+                showProfile(pictureView.getUser());
             }
         };
 
         for(DoryUser user : displayedUsers)
         {
             UserDetailsViewWithAddButton detailsView = new UserDetailsViewWithAddButton(this, user);
-            detailsView.setOnClickListener(SendFriendRequest);  // TODO This does not work because the View does not handle touch events
-            detailsView.getProfileView().setOnClickListener(ShowProfile); // TODO This doesn't work yet because the image does not contain the user information
+            detailsView.setButtonClickListener(SendFriendRequest);
+            detailsView.setPictureClickListener(ShowProfile);
             view.addView(detailsView);
         }
 
+    }
+
+    private void showProfile(DoryUser user) {
+        Intent startActivity = new Intent(this,UserProfileActivity.class);
+
+        Bundle extras = new Bundle();
+        extras.putString("user", new Gson().toJson(user));
+
+        startActivity(startActivity, extras);
     }
 
     private void sendFriendRequestTo(DoryUser user) {
