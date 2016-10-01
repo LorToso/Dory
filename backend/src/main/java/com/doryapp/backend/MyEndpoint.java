@@ -80,6 +80,7 @@ public class MyEndpoint {
         }
         return friends;
     }
+
     @ApiMethod(name = "getUsersByNickName", path = "users")
     public List<DoryUser> getUsersByNickName(@Named("searchedName") String searchedName)
     {
@@ -95,12 +96,6 @@ public class MyEndpoint {
         }
 
         return foundUsers;
-    }
-
-    @ApiMethod(name = "test", path = "testMethod")
-    public CharSequence test()
-    {
-        return "test";
     }
 
     // This method should be a POST-Type, but since that appears to be bugged (Throws HTTP 500) it is set as GET instead
