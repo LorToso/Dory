@@ -134,7 +134,7 @@ public class MyEndpoint {
         return false;
     }
 
-    @ApiMethod(name = "acceptFriendRequest", path = "acceptRequest")
+    @ApiMethod(name = "acceptFriendRequest", path = "acceptRequest", httpMethod = ApiMethod.HttpMethod.GET)
     public void acceptFriendRequest(@Named("requestID") String requestID, User user)
     {
         FriendshipRequest request = ofy().load().type(FriendshipRequest.class).id(requestID).now();
@@ -150,6 +150,23 @@ public class MyEndpoint {
 
         deleteUser(requestID);
     }
+
+    @ApiMethod(name = "getFriendshipRequests", path = "getFriendshipRequests", httpMethod = ApiMethod.HttpMethod.GET)
+    public List<FriendshipRequest> getFriendshipRequests(User user)
+    {
+        List<FriendshipRequest> requests = ofy().load().type(FriendshipRequest.class).list();
+        List<FriendshipRequest> result = new ArrayList<>();
+
+        for (FriendshipRequest request : requests) {
+            Friendship friendship = request.getFriendship();
+            if(friendship.getUser1().equals(user.getId()) || friendship.getUser2().equals(user.getId()))
+                result.add(request);
+        }
+
+        return result;
+    }
+
+
 
     private Key<Friendship> safeUser(Friendship newFriendship) {
         return ofy().save().entity(newFriendship).now();
@@ -205,6 +222,28 @@ public class MyEndpoint {
         ofy().save().entity(user).now();
 
         return new BoxedBool(true);
+    }
+
+    @ApiMethod(name = "getFriendshipStatus", path = "getFriendshipStatus", httpMethod = ApiMethod.HttpMethod.GET)
+    public FriendshipStatus getFriendshipStatus(@Named("userID") String userId, User user)
+    {
+        if (user.getId().equals(userId))
+            return new FriendshipStatus(FriendshipStatus.Status.SELF);
+
+        for (Friendship friendship : getFriendships(user)) {
+            if(friendship.getUser1().equals(userId) || friendship.getUser2().equals(userId))
+                return new FriendshipStatus(FriendshipStatus.Status.FRIEND);
+        }
+
+        for (FriendshipRequest request : getFriendshipRequests(user)) {
+            Friendship friendship = request.getFriendship();
+            if(friendship.getUser1().equals(userId))
+                return new FriendshipStatus(FriendshipStatus.Status.REQUEST_SENT);
+            if(friendship.getUser1().equals(userId))
+                return new FriendshipStatus(FriendshipStatus.Status.REQUEST_PENDING);
+        }
+
+        return new FriendshipStatus(FriendshipStatus.Status.NO_FRIEND);
     }
 
 }
