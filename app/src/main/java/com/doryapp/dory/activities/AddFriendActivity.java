@@ -58,9 +58,7 @@ public class AddFriendActivity extends AppCompatActivity {
     }
 
     private void notifyUIThread() {
-        Message m = new Message();
-        m.setTarget(mHandler);
-        m.sendToTarget();
+        mHandler.sendEmptyMessage(0);
     }
 
     private void findUsersWithFilter(String nickName) {
