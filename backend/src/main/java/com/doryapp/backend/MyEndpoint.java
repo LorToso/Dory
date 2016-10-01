@@ -108,6 +108,8 @@ public class MyEndpoint {
             return;
         if(!doesUserExist(friendId).valid)
             return;
+        if(doesFriendRequestExist(user.getId(), friendId))
+            return;
 
         Friendship friendship = new Friendship();
         friendship.setUser1(user.getId());
@@ -117,6 +119,19 @@ public class MyEndpoint {
         FriendshipRequest req = new FriendshipRequest();
         req.setFriendship(friendship);
         ofy().save().entity(req).now();
+    }
+
+    private boolean doesFriendRequestExist(String user1, String user2) {
+        List<FriendshipRequest> allFriendRequests = ofy().load().type(FriendshipRequest.class).list();
+
+        for (FriendshipRequest request : allFriendRequests) {
+            Friendship friendship = request.getFriendship();
+            if(friendship.getUser1().equals(user1) && friendship.getUser2().equals(user2))
+                return true;
+            if(friendship.getUser1().equals(user2) && friendship.getUser2().equals(user1))
+                return true;
+        }
+        return false;
     }
 
     @ApiMethod(name = "acceptFriendRequest", path = "acceptRequest")
