@@ -111,6 +111,8 @@ public class MyEndpoint {
             return;
         if(user.getId().equals(friendId))
             return;
+        if(!doesUserExist(friendId).valid)
+            return;
 
         Friendship friendship = new Friendship();
         friendship.setUser1(user.getId());
