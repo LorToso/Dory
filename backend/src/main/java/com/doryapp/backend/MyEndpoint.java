@@ -246,4 +246,10 @@ public class MyEndpoint {
         return new FriendshipStatus(FriendshipStatus.Status.NO_FRIEND);
     }
 
+    @ApiMethod(name = "getUserById", path = "getUserById", httpMethod = ApiMethod.HttpMethod.GET)
+    public DoryUser getUserById(@Named("userId") String id)
+    {
+        return ofy().load().type(DoryUser.class).id(id).now();
+    }
+
 }

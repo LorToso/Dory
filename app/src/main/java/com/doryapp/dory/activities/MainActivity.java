@@ -3,19 +3,30 @@ package com.doryapp.dory.activities;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.doryapp.backend.myApi.model.DoryUser;
+import com.doryapp.backend.myApi.model.FriendshipRequest;
 import com.doryapp.backend.myApi.model.Location;
 import com.doryapp.dory.R;
+import com.doryapp.dory.apiCalls.AcceptFriendRequestCall;
+import com.doryapp.dory.apiCalls.ApiCall;
 import com.doryapp.dory.apiCalls.AuthedApiCall;
 import com.doryapp.dory.apiCalls.CreateUserCall;
 import com.doryapp.dory.apiCalls.DoesUserExistCall;
-import com.doryapp.dory.apiCalls.GetFriendsCall;
+import com.doryapp.dory.apiCalls.GetFriendRequestCall;
+import com.doryapp.dory.apiCalls.GetUserByIdCall;
+import com.doryapp.dory.apiCalls.IgnoreFriendRequestCall;
+import com.doryapp.dory.extendedViews.FriendRequestView;
+import com.doryapp.dory.extendedViews.UserButton;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -25,9 +36,46 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback {
+
+
+    List<DoryUser> displayedUsers = new ArrayList<>();
+    Handler mHandler = new Handler(Looper.getMainLooper()){
+        @Override
+        public void handleMessage(Message inputMessage) {
+            displayRequests();
+        }
+    };
+
+    private void displayRequests() {
+
+        final LinearLayout layout = (LinearLayout) findViewById(R.id.friendRequest);
+
+        final View.OnClickListener acceptListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UserButton btn = (UserButton) v;
+                new AcceptFriendRequestCall(MainActivity.this, btn.getUser().getId()).execute();
+            }
+        };
+        final View.OnClickListener ignoreListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UserButton btn = (UserButton) v;
+                new IgnoreFriendRequestCall(MainActivity.this, btn.getUser().getId()).execute();
+            }
+        };
+
+        for (DoryUser user : displayedUsers) {
+            FriendRequestView reqView = new FriendRequestView(MainActivity.this, user);
+            reqView.setAcceptButtonListener(acceptListener);
+            reqView.setIgnoreButtonListener(ignoreListener);
+            layout.addView(reqView);
+        }
+    }
 
     private GoogleMap googleMap;
     private FirebaseAuth mFirebaseAuth;
@@ -40,6 +88,32 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
         setupFirebase();
         setupGoogleMap();
+        setupFriendRequestFields();
+    }
+
+    private void setupFriendRequestFields() {
+
+        displayedUsers.clear();
+
+        new GetFriendRequestCall(this, new ApiCall.OnComplete<List<FriendshipRequest>>() {
+            @Override
+            public void execute(List<FriendshipRequest> param) {
+                for (FriendshipRequest request : param) {
+                    String senderId = request.getFriendship().getUser1();
+                    if(senderId.equals(mFirebaseUser.getUid()))
+                        continue;
+
+                    new GetUserByIdCall(MainActivity.this, senderId, new ApiCall.OnComplete<DoryUser>() {
+                        @Override
+                        public void execute(DoryUser user) {
+                            displayedUsers.add(user);
+                        }
+                    }).execute();
+
+                    mHandler.sendEmptyMessage(0);
+                }
+            }
+        }).execute();
     }
 
     private void setupFirebase() {
@@ -146,9 +220,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         ((TextView) findViewById(R.id.TextView3)).setText(text3);
     }
 
-    public void onClickRegister(View v) {
-    }
-
     public void onClickLogin(View v) {
         if(mFirebaseUser != null)
             return;
@@ -160,15 +231,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         mFirebaseUser = mFirebaseAuth.getCurrentUser(); // Should be null
     }
 
-    public void onShowFriends(View v)
-    {
-        new GetFriendsCall(this, new AuthedApiCall.OnComplete<List<DoryUser>>() {
-            @Override
-            public void execute(List<DoryUser> param) {
-                // TODO
-            }
-        }).execute();
-    }
     public void onClickAddFriend(View v)
     {
         if(mFirebaseUser == null)
