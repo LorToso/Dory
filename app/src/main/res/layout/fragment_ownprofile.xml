@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:text="@string/placeholder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/pictureView"
+        android:layout_alignStart="@+id/nameView"
+        android:id="@+id/locationView" />
+
+    <TextView
+        android:text="@string/placeholder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/nameView"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="29dp" />
+
+    <ImageView
+        android:contentDescription="@string/user_profile_picture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@mipmap/ic_no_profile_picture"
+        android:id="@+id/pictureView"
+        android:layout_alignTop="@+id/nameView"
+        android:layout_alignParentStart="true" />
+
+
+
+    <TextView
+        android:text="Connect to Facebook:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/text_facebook"
+        android:layout_below="@+id/pictureView"
+        android:layout_marginTop="200dp" />
+
+    <TextView
+        android:text="Connect to Instagram:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/text_instagram"
+        android:layout_alignTop="@+id/text_facebook"
+        android:layout_alignLeft="@+id/text_facebook"
+        android:layout_marginTop="50dp"
+        />
+
+
+    <Button
+        android:text="Connect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/locationView"
+        android:layout_toEndOf="@+id/locationView"
+        android:layout_alignBaseline="@+id/text_facebook"
+        android:id="@+id/button_facebook" />
+    <Button
+        android:text="Connect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button_instagram"
+        android:layout_alignBaseline="@+id/text_instagram"
+        android:layout_alignLeft="@+id/button_facebook"/>
+
+
+</RelativeLayout>
+
