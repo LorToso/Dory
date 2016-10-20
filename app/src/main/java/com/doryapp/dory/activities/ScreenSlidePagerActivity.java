@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 
 import com.doryapp.dory.R;
 import com.doryapp.dory.extendedViews.ScreenSlidePagerAdapter;
@@ -49,5 +50,25 @@ public class ScreenSlidePagerActivity extends Activity {
             // Otherwise, select the previous step.
             mPager.setCurrentItem(mPager.getCurrentItem() - 1);
         }
+    }
+
+    public void onClickTabMe(View view) {
+        mPager.setCurrentItem(0);
+    }
+
+    public void onClickTabMap(View view) {
+        mPager.setCurrentItem(1);
+    }
+
+    public void onClickTabFriends(View view) {
+        mPager.setCurrentItem(2);
+    }
+
+    public void onClickTabCode(View view) {
+        mPager.setCurrentItem(3);
+    }
+
+    public void onClickTabOptions(View view) {
+        mPager.setCurrentItem(4);
     }
 }

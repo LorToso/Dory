@@ -12,7 +12,7 @@ import com.doryapp.dory.fragments.ScreenSlidePageFragment;
 public class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
 
 
-    private Fragment[] pages = new Fragment[]{new ScreenSlidePageFragment(), new ScreenSlidePageFragment(), new MapFragment(), new ScreenSlidePageFragment(), new ScreenSlidePageFragment()};
+    private Fragment[] pages = new Fragment[]{new ScreenSlidePageFragment(), new MapFragment(), new ScreenSlidePageFragment(), new ScreenSlidePageFragment(), new ScreenSlidePageFragment()};
 
     public ScreenSlidePagerAdapter(FragmentManager fm) {
         super(fm);

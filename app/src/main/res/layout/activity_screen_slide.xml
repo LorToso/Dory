@@ -23,30 +23,35 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btnMe"
+            android:onClick="onClickTabMe"
             android:layout_weight="1"/>
         <Button
             android:text="Map"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btnMap"
+            android:onClick="onClickTabMap"
             android:layout_weight="1"/>
         <Button
             android:text="Friends"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btnFriends"
+            android:onClick="onClickTabFriends"
             android:layout_weight="1"/>
         <Button
             android:text="Code"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btnCode"
+            android:onClick="onClickTabCode"
             android:layout_weight="1"/>
         <Button
             android:text="Options"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btnOptions"
+            android:onClick="onClickTabOptions"
             android:layout_weight="1"/>
     </LinearLayout>
 </RelativeLayout>
