@@ -22,31 +22,31 @@
             android:text="Me"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/button1"
+            android:id="@+id/btnMe"
             android:layout_weight="1"/>
         <Button
             android:text="Map"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/button2"
+            android:id="@+id/btnMap"
             android:layout_weight="1"/>
         <Button
             android:text="Friends"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/button3"
+            android:id="@+id/btnFriends"
             android:layout_weight="1"/>
         <Button
             android:text="Code"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/button4"
+            android:id="@+id/btnCode"
             android:layout_weight="1"/>
         <Button
             android:text="Options"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/button5"
+            android:id="@+id/btnOptions"
             android:layout_weight="1"/>
     </LinearLayout>
 </RelativeLayout>

@@ -15,23 +15,14 @@
 
 package com.doryapp.dory;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 
-import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
-
-import java.io.IOException;
-
-import javax.annotation.Nullable;
 
 /**
  * Application constants and simple utilities.
@@ -59,32 +50,6 @@ public class AppConstants {
      * Class instance of the HTTP transport.
      */
     public static final HttpTransport HTTP_TRANSPORT = AndroidHttp.newCompatibleTransport();
-
-    /**
-     * Count Google accounts on the device.
-     */
-    public static int countGoogleAccounts(Context context) {
-        AccountManager am = AccountManager.get(context);
-        Account[] accounts = am.getAccountsByType(GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE);
-        if (accounts.length < 1) {
-            return 0;
-        } else {
-            return accounts.length;
-        }
-    }
-
-
-    /**
-     * Check that Google Play services APK is installed and up to date.
-     */
-    public static boolean checkGooglePlayServicesAvailable(Activity activity) {
-        final int connectionStatusCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity);
-        if (GooglePlayServicesUtil.isUserRecoverableError(connectionStatusCode)) {
-            showGooglePlayServicesAvailabilityErrorDialog(activity, connectionStatusCode);
-            return false;
-        }
-        return true;
-    }
 
     /**
      * Called if the device does not have Google Play Services installed.
