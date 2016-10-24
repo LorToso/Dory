@@ -252,4 +252,10 @@ public class MyEndpoint {
         return ofy().load().type(DoryUser.class).id(id).now();
     }
 
+
+    @ApiMethod(name = "nop", path = "nop", httpMethod = ApiMethod.HttpMethod.GET)
+    public void nop()
+    {
+    }
+
 }
