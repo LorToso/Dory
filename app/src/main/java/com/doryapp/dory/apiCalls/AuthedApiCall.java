@@ -1,7 +1,5 @@
 package com.doryapp.dory.apiCalls;
 
-import android.util.Log;
-
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,7 +32,7 @@ public abstract class AuthedApiCall extends ApiCall{
                 try {
                     tokenResult = Tasks.await(tokenTask);
                 } catch (ExecutionException | InterruptedException e) {
-                    Log.e("Awaiting GetTokenResult", e.getLocalizedMessage());
+                    handle(e);
                     return;
                 }
 
@@ -44,8 +42,7 @@ public abstract class AuthedApiCall extends ApiCall{
                 try {
                     performCall(token);
                 } catch (IOException e) {
-                    // TODO Toast from different Thread or sth?
-                    Log.e("performingAsyncCall", e.getLocalizedMessage());
+                    handle(e);
                     return;
                 }
             }

@@ -21,11 +21,11 @@ public class Api {
     }
 
     public static MyApi get(String serverURL) {
-        return finalizeBuilder(null, serverURL);
+        return finalizeBuilder(new ApiRequestInitializer(), serverURL);
     }
 
     public static MyApi getAuthenticated(String serverURL, String token) {
-        return finalizeBuilder(getAuthenticationInitializer(token), serverURL);
+        return finalizeBuilder(new AuthentificatedApiRequestInitializer(token), serverURL);
     }
 
 
@@ -35,15 +35,6 @@ public class Api {
         builder.setRootUrl(serverURL);
         builder.setApplicationName("DoryApp");
         return builder.build();
-    }
-
-    private static HttpRequestInitializer getAuthenticationInitializer(final String token) {
-        return new HttpRequestInitializer() {
-            @Override
-            public void initialize(HttpRequest request) throws IOException {
-                request.setHeaders(new HttpHeaders().setAuthorization(token));
-            }
-        };
     }
 
 

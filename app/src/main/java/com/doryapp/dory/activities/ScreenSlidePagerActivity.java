@@ -13,9 +13,11 @@ import android.widget.Toast;
 import com.doryapp.backend.myApi.model.DoryUser;
 import com.doryapp.backend.myApi.model.Location;
 import com.doryapp.dory.R;
+import com.doryapp.dory.apiCalls.ApiCall;
 import com.doryapp.dory.apiCalls.AuthedApiCall;
 import com.doryapp.dory.apiCalls.CreateUserCall;
 import com.doryapp.dory.apiCalls.DoesUserExistCall;
+import com.doryapp.dory.apiCalls.NopCall;
 import com.doryapp.dory.extendedViews.ScreenSlidePagerAdapter;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.appindexing.Action;
@@ -24,6 +26,8 @@ import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import xdroid.toaster.Toaster;
 
 
 public class ScreenSlidePagerActivity extends Activity implements FirebaseUserProvider{
@@ -53,15 +57,36 @@ public class ScreenSlidePagerActivity extends Activity implements FirebaseUserPr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_screen_slide);
 
+        setupViewPager();
+        setupFirebase();
+        checkServerConnection();
+
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+    }
+
+    private void checkServerConnection() {
+        new NopCall(this, "", new ApiCall.OnComplete<Boolean>() {
+            @Override
+            public void execute(Boolean param) {
+                Toaster.toast(param ? "Server connected" : "SERVER CONNECTION FAILED!");
+            }
+        }).onException(new ApiCall.OnException() {
+            @Override
+            public void handle(Exception ex) {
+                Toaster.toast("SERVER CONNECTION EXCEPTION!");
+                ex.printStackTrace();
+            }
+        }).execute();
+    }
+
+    private void setupViewPager() {
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (ViewPager) findViewById(R.id.pager);
         mPagerAdapter = new ScreenSlidePagerAdapter(getFragmentManager());
         mPager.setAdapter(mPagerAdapter);
-
-        setupFirebase();
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override

@@ -11,7 +11,7 @@ public abstract class SimpleApiCall extends ApiCall{
                 try {
                     performCall();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    handle(e);
                     return;
                 }
             }
