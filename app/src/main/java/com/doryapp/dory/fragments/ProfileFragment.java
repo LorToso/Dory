@@ -33,6 +33,8 @@ public class ProfileFragment extends Fragment {
     };
 
     private void showUserMainThread(DoryUser user) {
+        if(user == null)
+            return;
         ((TextView)getActivity().findViewById(R.id.nameView)).setText(user.getFirstName() + " " + user.getLastName());
         Location location = user.getLocation();
         ((TextView)getActivity().findViewById(R.id.locationView)).setText(location != null ? user.getLocation().toString() : "NO LOCATION SET");

@@ -47,6 +47,7 @@ dependencies {
     compile 'org.jetbrains:annotations-java5:15.0'
     compile 'com.google.code.gson:gson:2.4'
     compile 'com.android.support:support-v4:24.2.1'
+    compile 'com.android.support:design:24.2.1'
     compile 'com.shamanland:xdroid-toaster:0.0.10'
     testCompile 'junit:junit:4.12'
     testCompile 'com.google.appengine:appengine-endpoints:1.9.42'

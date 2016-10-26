@@ -80,6 +80,24 @@ public class MyEndpoint {
         }
         return friends;
     }
+    @ApiMethod(name = "getFriendsByNickname", path = "friendsByNickname")
+    public List<DoryUser> getFriendsByNickname(@Named("searchedName") String searchedName, User user)
+    {
+        if(user == null)
+            return null;
+
+        List<DoryUser> allFriends = getFriends(user);
+        List<DoryUser> foundFriends = new ArrayList<>();
+        searchedName = searchedName.toLowerCase();
+
+        for (DoryUser doryUser : allFriends ) {
+            String nick = doryUser.getNickName().toLowerCase();
+            if (nick.contains(searchedName))
+                foundFriends.add(doryUser);
+        }
+
+        return foundFriends;
+    }
 
     @ApiMethod(name = "getUsersByNickName", path = "users")
     public List<DoryUser> getUsersByNickName(@Named("searchedName") String searchedName)
