@@ -68,10 +68,10 @@ public class ScreenSlidePagerActivity extends Activity implements FirebaseUserPr
     }
 
     private void checkServerConnection() {
-        new NopCall(this, "", new ApiCall.OnComplete<Boolean>() {
+        new NopCall(this, "").onComplete(new ApiCall.OnComplete<Void>() {
             @Override
-            public void execute(Boolean param) {
-                Toaster.toast(param ? "Server connected" : "SERVER CONNECTION FAILED!");
+            public void execute(Void v) {
+                Toaster.toast("Server connected");
             }
         }).onException(new ApiCall.OnException() {
             @Override
@@ -134,7 +134,7 @@ public class ScreenSlidePagerActivity extends Activity implements FirebaseUserPr
     }
 
     private void startCreateUserActivityIfNecessary() {
-        new DoesUserExistCall(this, mFirebaseUser.getUid(), new AuthedApiCall.OnComplete<Boolean>() {
+        new DoesUserExistCall(this, mFirebaseUser.getUid()).onComplete(new AuthedApiCall.OnComplete<Boolean>() {
             @Override
             public void execute(Boolean userExists) {
                 if (userExists)

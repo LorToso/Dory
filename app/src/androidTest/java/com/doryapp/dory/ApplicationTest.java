@@ -36,7 +36,7 @@ public class ApplicationTest {//extends ActivityTestRule<MainActivity> {
 
         Assert.assertNotNull(firebaseAuth.getCurrentUser());
 
-        new DoesUserExistCall(con, firebaseAuth.getCurrentUser().getUid(), new AuthedApiCall.OnComplete<Boolean>() {
+        new DoesUserExistCall(con, firebaseAuth.getCurrentUser().getUid()).onComplete(new AuthedApiCall.OnComplete<Boolean>() {
             @Override
             public void execute(Boolean param) {
                 assertFalse(param);

@@ -12,22 +12,19 @@ import java.io.IOException;
  * Created by Lorenzo Toso on 03.10.2016.
  */
 
-public class GetUserByIdCall extends SimpleApiCall {
+public class GetUserByIdCall extends SimpleApiCall<DoryUser> {
 
     private Context context;
     private String userId;
-    private OnComplete<DoryUser> onComplete;
 
-    public GetUserByIdCall(Context context, String userId, OnComplete<DoryUser> onComplete) {
+    public GetUserByIdCall(Context context, String userId) {
         this.context = context;
         this.userId = userId;
-        this.onComplete = onComplete;
     }
 
     @Override
-    protected void performCall() throws IOException {
+    protected DoryUser performCall() throws IOException {
         MyApi api = Api.get(context);
-        DoryUser user = api.getUserById(userId).execute();
-        onComplete.execute(user);
+        return api.getUserById(userId).execute();
     }
 }

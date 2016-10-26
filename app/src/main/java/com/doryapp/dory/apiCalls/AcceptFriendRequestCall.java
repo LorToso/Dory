@@ -11,7 +11,7 @@ import java.io.IOException;
  * Created by Lorenzo Toso on 01.10.2016.
  */
 
-public class AcceptFriendRequestCall extends AuthedApiCall {
+public class AcceptFriendRequestCall extends AuthedApiCall<Void> {
 
     private Context context;
     private String friendID;
@@ -23,8 +23,9 @@ public class AcceptFriendRequestCall extends AuthedApiCall {
     }
 
     @Override
-    protected void performCall(String token) throws IOException {
+    protected Void performCall(String token) throws IOException {
         MyApi api = Api.getAuthenticated(context,token);
         api.acceptFriendRequest(friendID).execute();
+        return null;
     }
 }

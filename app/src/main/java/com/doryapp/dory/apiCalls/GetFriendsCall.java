@@ -13,22 +13,20 @@ import java.util.List;
 /**
  * Created by Lorenzo Toso on 02.09.2016.
  */
-public class GetFriendsCall extends AuthedApiCall {
+public class GetFriendsCall extends AuthedApiCall<List<DoryUser>> {
 
-    private OnComplete<List<DoryUser>> onComplete;
     private Context context;
 
-    public GetFriendsCall(Context context, OnComplete<List<DoryUser>> onComplete)
+    public GetFriendsCall(Context context)
     {
-        this.onComplete = onComplete;
         this.context = context;
     }
 
     @Override
-    protected void performCall(String token) throws IOException {
+    protected List<DoryUser> performCall(String token) throws IOException {
         MyApi api = Api.getAuthenticated(context,token);
         DoryUserCollection collection = api.getFriends().execute();
         List<DoryUser> friends = collection == null ? null : collection.getItems();
-        onComplete.execute(friends);
+        return friends;
     }
 }

@@ -10,7 +10,7 @@ import java.io.IOException;
 /**
  * Created by Lorenzo Toso on 01.09.2016.
  */
-public class SendFriendRequestCall extends AuthedApiCall {
+public class SendFriendRequestCall extends AuthedApiCall<Void> {
 
     private String otherUserId;
     private Context context;
@@ -22,8 +22,9 @@ public class SendFriendRequestCall extends AuthedApiCall {
     }
 
     @Override
-    protected void performCall(String token) throws IOException {
+    protected Void performCall(String token) throws IOException {
         MyApi api = Api.getAuthenticated(context,token);
         api.sendFriendRequest(otherUserId).execute();
+        return null;
     }
 }

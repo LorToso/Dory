@@ -9,7 +9,7 @@ import com.google.firebase.auth.GetTokenResult;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
-public abstract class AuthedApiCall extends ApiCall{
+public abstract class AuthedApiCall<ReturnType> extends ApiCall<ReturnType>{
 
     public AuthedApiCall()
     {
@@ -40,7 +40,8 @@ public abstract class AuthedApiCall extends ApiCall{
                     return;
                 String token = tokenResult.getToken();
                 try {
-                    performCall(token);
+                    ReturnType value = performCall(token);
+                    complete(value);
                 } catch (IOException e) {
                     handle(e);
                     return;
@@ -50,5 +51,5 @@ public abstract class AuthedApiCall extends ApiCall{
     }
 
 
-    protected abstract void performCall(String token) throws IOException;
+    protected abstract ReturnType performCall(String token) throws IOException;
 }

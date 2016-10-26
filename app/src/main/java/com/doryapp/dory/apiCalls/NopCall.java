@@ -11,18 +11,19 @@ import java.io.IOException;
 /**
  * This class is probably only used to test the connection to the server.
  */
-public class NopCall extends SimpleApiCall {
+public class NopCall extends SimpleApiCall<Void> {
 
     private Context context;
 
-    public NopCall(Context context, String userId, OnComplete<Boolean> onComplete)
+    public NopCall(Context context, String userId)
     {
         this.context = context;
     }
 
     @Override
-    protected void performCall() throws IOException {
+    protected Void performCall() throws IOException {
         MyApi api = Api.get(context);
         api.nop().execute();
+        return null;
     }
 }

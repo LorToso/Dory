@@ -42,7 +42,7 @@ public class UserDetailsViewWithAddButton extends UserDetailsView {
 
     private void updateButtonStatus()
     {
-        new GetFriendshipStatusCall(getContext(), user.getId(), new ApiCall.OnComplete<FriendshipStatus>() {
+        new GetFriendshipStatusCall(getContext(), user.getId()).onComplete(new ApiCall.OnComplete<FriendshipStatus>() {
             @Override
             public void execute(FriendshipStatus param) {
                 switch (param.getFriendshipStatus())

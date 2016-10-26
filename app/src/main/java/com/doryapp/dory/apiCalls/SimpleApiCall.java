@@ -2,14 +2,15 @@ package com.doryapp.dory.apiCalls;
 
 import java.io.IOException;
 
-public abstract class SimpleApiCall extends ApiCall{
+public abstract class SimpleApiCall<ReturnType> extends ApiCall<ReturnType>{
 
     public SimpleApiCall() {
         call = new Runnable() {
             @Override
             public void run() {
                 try {
-                    performCall();
+                    ReturnType value = performCall();
+                    complete(value);
                 } catch (IOException e) {
                     handle(e);
                     return;
@@ -17,5 +18,5 @@ public abstract class SimpleApiCall extends ApiCall{
             }
         };
     }
-    protected abstract void performCall() throws IOException;
+    protected abstract ReturnType performCall() throws IOException;
 }

@@ -11,24 +11,22 @@ import java.io.IOException;
 /**
  * Created by Lorenzo Toso on 01.09.2016.
  */
-public class DoesUserExistCall extends SimpleApiCall {
+public class DoesUserExistCall extends SimpleApiCall<java.lang.Boolean> {
 
 
     private String userId;
-    private OnComplete<Boolean> onComplete;
     private Context context;
 
-    public DoesUserExistCall(Context context, String userId, OnComplete<Boolean> onComplete)
+    public DoesUserExistCall(Context context, String userId)
     {
         this.userId = userId;
-        this.onComplete = onComplete;
         this.context = context;
     }
 
     @Override
-    protected void performCall() throws IOException {
+    protected Boolean performCall() throws IOException {
         MyApi api = Api.get(context);
         BoxedBool bool = api.doesUserExist(userId).execute();
-        onComplete.execute(bool.getValid());
+        return bool.getValid();
     }
 }

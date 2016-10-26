@@ -48,7 +48,7 @@ public class AddFriendActivity extends AppCompatActivity {
     }
 
     private void findAllUsers() {
-        new GetUsersCall(this, new ApiCall.OnComplete<List<DoryUser>>() {
+        new GetUsersCall(this).onComplete(new ApiCall.OnComplete<List<DoryUser>>() {
             @Override
             public void execute(List<DoryUser> users) {
                 displayedUsers = users;
@@ -62,13 +62,13 @@ public class AddFriendActivity extends AppCompatActivity {
     }
 
     private void findUsersWithFilter(String nickName) {
-        new GetUsersCall(this, new ApiCall.OnComplete<List<DoryUser>>() {
+        new GetUsersCall(this, nickName).onComplete( new ApiCall.OnComplete<List<DoryUser>>() {
             @Override
             public void execute(List<DoryUser> users) {
                 displayedUsers = users;
                 notifyUIThread();
             }
-        }, nickName).execute();
+        }).execute();
     }
 
     public void onClickSearch(View v) throws IOException {

@@ -38,10 +38,9 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(
-                R.layout.fragment_ownprofile, container, false);
 
-        return rootView;
+        return inflater.inflate(
+                R.layout.fragment_ownprofile, container, false);
     }
     @Override
     public void onStart()
@@ -50,14 +49,12 @@ public class ProfileFragment extends Fragment {
 
         FirebaseUserProvider userProvider = (FirebaseUserProvider)getActivity();
         FirebaseUser user = userProvider.getUser();
-        new GetUserByIdCall(getActivity(), user.getUid(), new ApiCall.OnComplete<DoryUser>() {
+        new GetUserByIdCall(getActivity(), user.getUid()).onComplete(new ApiCall.OnComplete<DoryUser>() {
             @Override
             public void execute(DoryUser user) {
                 showUser(user);
             }
-        });
-
-
+        }).execute();
     }
 
     private void showUser(DoryUser user) {

@@ -95,7 +95,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
         displayedUsers.clear();
 
-        new GetFriendRequestCall(this, new ApiCall.OnComplete<List<FriendshipRequest>>() {
+        new GetFriendRequestCall(this).onComplete(new ApiCall.OnComplete<List<FriendshipRequest>>() {
             @Override
             public void execute(List<FriendshipRequest> param) {
                 for (FriendshipRequest request : param) {
@@ -103,7 +103,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                     if(senderId.equals(mFirebaseUser.getUid()))
                         continue;
 
-                    new GetUserByIdCall(MainActivity.this, senderId, new ApiCall.OnComplete<DoryUser>() {
+                    new GetUserByIdCall(MainActivity.this, senderId).onComplete(new ApiCall.OnComplete<DoryUser>() {
                         @Override
                         public void execute(DoryUser user) {
                             displayedUsers.add(user);
@@ -158,7 +158,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void startCreateUserActivityIfNecessary() {
-        new DoesUserExistCall(this, mFirebaseUser.getUid(), new AuthedApiCall.OnComplete<Boolean>() {
+        new DoesUserExistCall(this, mFirebaseUser.getUid()).onComplete(new AuthedApiCall.OnComplete<Boolean>() {
             @Override
             public void execute(Boolean userExists) {
                 if(userExists)
