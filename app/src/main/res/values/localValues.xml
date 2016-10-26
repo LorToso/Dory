@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--<string name="server_url">https://dory-1469989006683.appspot.com/</string>-->
+
+    <string name="server_url">http://192.168.178.137:8080/_ah/api</string>
+    <!--<string name="server_url">http://192.168.178.137:8080/_ah/api</string>-->
+    <!--<string name="server_url">http://localhost:8080/_ah/api</string>-->
+    <!--<string name="server_url">http://192.168.43.148:8080/_ah/api</string>-->
+
+
+</resources>

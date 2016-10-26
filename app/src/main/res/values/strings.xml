@@ -10,18 +10,10 @@
 
     <string name="firebase_url">https://dory-1469989006683.firebaseio.com</string>
 
-    <!--<string name="server_url">https://dory-1469989006683.appspot.com/</string>-->
-    <string name="server_url">http://192.168.2.134:8080/_ah/api</string>
     <string name="lorem_ipsum">lorem ipsum</string>
-    <!--<string name="server_url">http://192.168.178.137:8080/_ah/api</string>-->
-    <!--<string name="server_url">http://localhost:8080/_ah/api</string>-->
-    <!--<string name="server_url">http://192.168.43.148:8080/_ah/api</string>-->
 
     <integer name="create_user_request_code">1234</integer>
     <integer name="login_request_code">1580</integer>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="user_profile_picture">User profile picture</string>
     <string name="ok">OK</string>
     <string name="placeholder">Placeholder</string>
