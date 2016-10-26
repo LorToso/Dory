@@ -28,7 +28,6 @@ public class GetFriendsByNicknameCall extends AuthedApiCall<List<DoryUser>> {
     protected List<DoryUser> performCall(String token) throws IOException {
         MyApi api = Api.getAuthenticated(context,token);
         DoryUserCollection collection = api.getFriendsByNickname(nickname).execute();
-        List<DoryUser> friends = collection == null ? null : collection.getItems();
-        return friends;
+        return collection == null ? null : collection.getItems();
     }
 }
