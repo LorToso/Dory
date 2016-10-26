@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.doryapp.backend.myApi.model.DoryUser;
+import com.doryapp.backend.myApi.model.Location;
 import com.doryapp.dory.R;
 import com.doryapp.dory.activities.FirebaseUserProvider;
 import com.doryapp.dory.apiCalls.ApiCall;
@@ -33,7 +34,9 @@ public class ProfileFragment extends Fragment {
 
     private void showUserMainThread(DoryUser user) {
         ((TextView)getActivity().findViewById(R.id.nameView)).setText(user.getFirstName() + " " + user.getLastName());
-        ((TextView)getActivity().findViewById(R.id.locationView)).setText(user.getLocation().toString());
+        Location location = user.getLocation();
+        ((TextView)getActivity().findViewById(R.id.locationView)).setText(location != null ? user.getLocation().toString() : "NO LOCATION SET");
+        ((TextView)getActivity().findViewById(R.id.emailView)).setText(location != null ? user.getEmailAddress() : "NO EMAIL SET");
     }
 
     @Override

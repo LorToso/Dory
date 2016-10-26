@@ -10,18 +10,31 @@
         android:text="@string/placeholder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/pictureView"
-        android:layout_alignStart="@+id/nameView"
-        android:id="@+id/locationView" />
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="29dp"
+        android:id="@+id/nameView"/>
+
 
     <TextView
         android:text="@string/placeholder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/nameView"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="29dp" />
+        android:layout_alignStart="@+id/nameView"
+        android:layout_below="@+id/nameView"
+        android:layout_marginTop="10dp"
+        android:id="@+id/locationView" />
+
+
+    <TextView
+        android:text="@string/placeholder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/nameView"
+        android:layout_below="@+id/locationView"
+        android:layout_marginTop="10dp"
+        android:id="@+id/emailView" />
+
 
     <ImageView
         android:contentDescription="@string/user_profile_picture"
