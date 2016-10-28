@@ -6,8 +6,8 @@ import android.support.test.runner.AndroidJUnit4;
 
 import com.doryapp.backend.myApi.model.DoryUser;
 import com.doryapp.dory.apiCalls.ApiCall;
-import com.doryapp.dory.apiCalls.AuthedApiCall;
 import com.doryapp.dory.apiCalls.CreateUserCall;
+import com.doryapp.dory.apiCalls.DeleteOwnUserCall;
 import com.doryapp.dory.apiCalls.DoesUserExistCall;
 import com.doryapp.dory.apiCalls.NopCall;
 import com.google.android.gms.tasks.Task;
@@ -22,9 +22,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class ApplicationTest {
@@ -41,6 +38,15 @@ public class ApplicationTest {
         logoutIfNecessary();
     }
 
+    @Before
+    public void before()
+    {
+        signInTestUser();
+        boolean userExists = new DoesUserExistCall(con, firebaseAuth.getCurrentUser().getUid()).executeSynchronously();
+        if(userExists)
+            new DeleteOwnUserCall(con).executeSynchronously();
+        logoutIfNecessary();
+    }
     @After
     public void after(){
         logoutIfNecessary();
@@ -87,12 +93,8 @@ public class ApplicationTest {
     public void canCreateUser() {
         FirebaseUser user = signInTestUser();
 
-        new DoesUserExistCall(con, user.getUid()).onComplete(new AuthedApiCall.OnComplete<Boolean>() {
-            @Override
-            public void execute(Boolean param) {
-                assertFalse(param);
-            }
-        }).executeSynchronously();
+        boolean userExists = new DoesUserExistCall(con, user.getUid()).executeSynchronously();
+        Assert.assertFalse(userExists);
 
         DoryUser doryUser = new DoryUser();
         doryUser.setFirstName("firstName");
@@ -103,15 +105,14 @@ public class ApplicationTest {
 
         new CreateUserCall(con, doryUser).executeSynchronously();
 
-        new DoesUserExistCall(con, user.getUid()).onComplete(new AuthedApiCall.OnComplete<Boolean>() {
-            @Override
-            public void execute(Boolean param) {
-                assertTrue(param);
-            }
-        }).executeSynchronously();
+        userExists = new DoesUserExistCall(con, user.getUid()).executeSynchronously();
+        Assert.assertTrue(userExists);
 
-        //TODO Delete user
-        //TODO Check if deleted user no longer exists
+        boolean userWasDeleted = new DeleteOwnUserCall(con).executeSynchronously();
+        Assert.assertTrue(userWasDeleted);
+
+        userExists = new DoesUserExistCall(con, user.getUid()).executeSynchronously();
+        Assert.assertFalse(userExists);
    }
     // TODO test all methods of MyEndpoint
     // TODO Create according apiCalls
