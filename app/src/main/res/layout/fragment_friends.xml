@@ -37,6 +37,8 @@
 
         app:fabSize="normal"
         android:clickable="true"
+        android:onClick="onClickAddFriend"
+        android:id="@+id/btnAddFriend"
         android:src="@drawable/ic_person_add_black_48dp"
         />
 </RelativeLayout>

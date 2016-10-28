@@ -6,14 +6,19 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 
 import com.doryapp.backend.myApi.model.DoryUser;
 import com.doryapp.dory.R;
+import com.doryapp.dory.activities.AddFriendActivity;
+import com.doryapp.dory.activities.CreateUserActivity;
+import com.doryapp.dory.activities.MainActivity;
 import com.doryapp.dory.activities.UserProfileActivity;
 import com.doryapp.dory.apiCalls.ApiCall;
 import com.doryapp.dory.apiCalls.GetFriendsByNicknameCall;
@@ -43,6 +48,11 @@ public class FriendsFragment extends Fragment {
         }
     };
 
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public void onStart()
@@ -79,6 +89,12 @@ public class FriendsFragment extends Fragment {
         SearchView searchView  = (SearchView)v;
         CharSequence searchedName = searchView.getQuery();
         findUsersWithFilter(searchedName.toString());
+    }
+
+    public void onClickAddFriend(View v)
+    {
+        Intent startActivity = new Intent(getActivity(),AddFriendActivity.class);
+        startActivityForResult(startActivity, 0);
     }
 
     private void displayUsers() {
@@ -125,8 +141,20 @@ public class FriendsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        return inflater.inflate(
+        View view =  inflater.inflate(
                 R.layout.fragment_friends, container, false);
+
+
+        FloatingActionButton button = (FloatingActionButton) view.findViewById(R.id.btnAddFriend);
+        button.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                onClickAddFriend(v);
+            }
+        });
+        return view;
     }
 }
 
