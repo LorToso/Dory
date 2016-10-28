@@ -68,7 +68,7 @@ public class ScreenSlidePagerActivity extends Activity implements FirebaseUserPr
     }
 
     private void checkServerConnection() {
-        new NopCall(this, "").onComplete(new ApiCall.OnComplete<Void>() {
+        new NopCall(this).onComplete(new ApiCall.OnComplete<Void>() {
             @Override
             public void execute(Void v) {
                 Toaster.toast("Server connected");

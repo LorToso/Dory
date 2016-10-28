@@ -15,7 +15,7 @@ public class NopCall extends SimpleApiCall<Void> {
 
     private Context context;
 
-    public NopCall(Context context, String userId)
+    public NopCall(Context context)
     {
         this.context = context;
     }
