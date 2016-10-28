@@ -1,0 +1,73 @@
+{
+  "project_info": {
+    "project_number": "1000757637592",
+    "firebase_url": "https://dory-1469989006683.firebaseio.com",
+    "project_id": "dory-1469989006683",
+    "storage_bucket": "dory-1469989006683.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1000757637592:android:001feec0d1958054",
+        "android_client_info": {
+          "package_name": "com.doryapp.server"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1000757637592-haei0aonc6bojdd44ot5mjtq9rhct9dh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfTkO08ZP7KqCHNgh6jxUp5QiEc1Dc_pk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1000757637592:android:81a8108030db2619",
+        "android_client_info": {
+          "package_name": "com.doryapp.dory"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1000757637592-haei0aonc6bojdd44ot5mjtq9rhct9dh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfTkO08ZP7KqCHNgh6jxUp5QiEc1Dc_pk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
