@@ -13,22 +13,28 @@ public abstract class ApiCall<ReturnType>{
     protected Runnable call;
     protected List<OnException> exceptionHandler = new ArrayList<>();
     protected List<OnComplete<ReturnType>> completionHandler = new ArrayList<>();
+    private ReturnType result;
 
     public void execute()
     {
         AsyncTask.execute(call);
     }
-    public void executeSynchronously()
+    public ReturnType executeSynchronously()
     {
         call.run();
+        return getResult();
     }
     public ApiCall onException(OnException exceptionHandler){this.exceptionHandler.add(exceptionHandler); return this;}
     public ApiCall onComplete(OnComplete<ReturnType> completionHandler){this.completionHandler.add(completionHandler); return this;}
 
-
+    private ReturnType getResult()
+    {
+        return result;
+    }
 
     protected void complete(ReturnType returnValue)
     {
+        this.result = returnValue;
         for (OnComplete<ReturnType> handler : completionHandler) {
             handler.execute(returnValue);
         }

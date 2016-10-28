@@ -271,6 +271,20 @@ public class MyEndpoint {
     }
 
 
+    @ApiMethod(name = "deleteOwnUser", httpMethod = ApiMethod.HttpMethod.GET)
+    public BoxedBool deleteOwnUser(User user)
+    {
+        if(user == null)
+            return new BoxedBool(false);
+
+        if(!doesUserExist(user.getId()).valid)
+            return new BoxedBool(false);
+
+        ofy().delete().type(DoryUser.class).id(user.getId()).now();
+        return new BoxedBool(true);
+    }
+
+
     @ApiMethod(name = "nop", path = "nop", httpMethod = ApiMethod.HttpMethod.GET)
     public void nop()
     {
