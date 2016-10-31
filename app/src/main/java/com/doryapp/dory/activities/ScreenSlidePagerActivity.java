@@ -61,7 +61,6 @@ public class ScreenSlidePagerActivity extends Activity implements FirebaseUserPr
         setupFirebase();
         checkServerConnection();
 
-
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -157,9 +156,19 @@ public class ScreenSlidePagerActivity extends Activity implements FirebaseUserPr
 
     private void handleLoginUserResult(int resultCode, Intent data) {
         if (resultCode != RESULT_OK)
+        {
+            forceUserLogin();
             return;
+        }
+
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
         startCreateUserActivityIfNecessary();
+        Toaster.toast("User: " + mFirebaseUser.getEmail());
+    }
+
+    private void forceUserLogin() {
+        Toaster.toast("You have to log in!");
+        showLoginUI();
     }
 
     private void handleCreateUserResult(int resultCode, Intent data) {
