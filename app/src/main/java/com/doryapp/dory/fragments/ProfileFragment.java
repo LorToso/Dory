@@ -54,6 +54,8 @@ public class ProfileFragment extends Fragment {
 
         FirebaseUserProvider userProvider = (FirebaseUserProvider)getActivity();
         FirebaseUser user = userProvider.getUser();
+        if(user == null)
+            return;
         new GetUserByIdCall(getActivity(), user.getUid()).onComplete(new ApiCall.OnComplete<DoryUser>() {
             @Override
             public void execute(DoryUser user) {
