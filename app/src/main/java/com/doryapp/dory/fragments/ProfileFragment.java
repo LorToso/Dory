@@ -56,6 +56,7 @@ public class ProfileFragment extends Fragment {
         FirebaseUser user = userProvider.getUser();
         if(user == null)
             return;
+        // TODO this fragment should probably listen to the AuthentificationStateListener of Firebase and show users as soon as they log in
         new GetUserByIdCall(getActivity(), user.getUid()).onComplete(new ApiCall.OnComplete<DoryUser>() {
             @Override
             public void execute(DoryUser user) {
