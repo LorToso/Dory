@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,13 +17,14 @@ import com.doryapp.dory.R;
 import com.doryapp.dory.activities.FirebaseUserProvider;
 import com.doryapp.dory.apiCalls.ApiCall;
 import com.doryapp.dory.apiCalls.GetUserByIdCall;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 /**
  * Created by Lorenzo Toso on 24.10.2016.
  */
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment implements FirebaseAuth.AuthStateListener {
 
     DoryUser user;
     Handler mHandler = new Handler(Looper.getMainLooper()){
@@ -47,6 +49,16 @@ public class ProfileFragment extends Fragment {
         return inflater.inflate(
                 R.layout.fragment_ownprofile, container, false);
     }
+
+    @Override
+    public void onCreate(Bundle b)
+    {
+        super.onCreate(b);
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        auth.addAuthStateListener(this);
+    }
+
     @Override
     public void onStart()
     {
@@ -54,9 +66,14 @@ public class ProfileFragment extends Fragment {
 
         FirebaseUserProvider userProvider = (FirebaseUserProvider)getActivity();
         FirebaseUser user = userProvider.getUser();
+
+        showUser(user);
+    }
+
+    private void showUser(FirebaseUser user) {
         if(user == null)
-            return;
-        // TODO this fragment should probably listen to the AuthentificationStateListener of Firebase and show users as soon as they log in
+            showEmptyUser();
+
         new GetUserByIdCall(getActivity(), user.getUid()).onComplete(new ApiCall.OnComplete<DoryUser>() {
             @Override
             public void execute(DoryUser user) {
@@ -65,9 +82,26 @@ public class ProfileFragment extends Fragment {
         }).execute();
     }
 
+    private void showEmptyUser() {
+        DoryUser emptyUser = new DoryUser();
+        emptyUser.setNickName("NO USER");
+        emptyUser.setFirstName("NO USER");
+        emptyUser.setLastName("NO USER");
+        emptyUser.setEmailAddress("NO USER");
+        emptyUser.setId("0");
+
+        showUserMainThread(emptyUser);
+    }
+
     private void showUser(DoryUser user) {
         this.user = user;
         mHandler.sendEmptyMessage(0);
+    }
+
+    @Override
+    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        showUser(user);
     }
 }
 
