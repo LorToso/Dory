@@ -39,8 +39,10 @@ dependencies {
     compile 'com.shamanland:xdroid-toaster:0.0.10'
     testCompile 'junit:junit:4.12'
     testCompile 'com.google.appengine:appengine-endpoints:1.9.42'
+    androidTestCompile 'com.android.support.test:rules:0.4'
 
     testCompile group: 'com.google.appengine', name: 'appengine-testing', version: '1.4.0'
     testCompile group: 'com.google.appengine', name: 'appengine-api-1.0-sdk', version: '1.4.3'
 
+    androidTestCompile 'org.testng:testng:6.9.6'
 }
