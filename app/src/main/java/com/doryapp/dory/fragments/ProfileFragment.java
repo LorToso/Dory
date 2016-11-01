@@ -73,13 +73,14 @@ public class ProfileFragment extends Fragment implements FirebaseAuth.AuthStateL
     private void showUser(FirebaseUser user) {
         if(user == null)
             showEmptyUser();
-
-        new GetUserByIdCall(getActivity(), user.getUid()).onComplete(new ApiCall.OnComplete<DoryUser>() {
-            @Override
-            public void execute(DoryUser user) {
-                showUser(user);
-            }
-        }).execute();
+        else {
+            new GetUserByIdCall(getActivity(), user.getUid()).onComplete(new ApiCall.OnComplete<DoryUser>() {
+                @Override
+                public void execute(DoryUser user) {
+                    showUser(user);
+                }
+            }).execute();
+        }
     }
 
     private void showEmptyUser() {
