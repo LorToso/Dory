@@ -5,6 +5,7 @@ install:
     - sudo apt-get update
     - sudo apt-get install -u lib32stdc++6 lib32z1
     - sudo chmod 777 gradlew
+    - mkdir ~/.android
     - sudo ./gradlew clean assemble
 before_script:
     - mkdir -p shippable/testresults
