@@ -32,7 +32,7 @@
             android:value="@string/facebook_app_id" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_app_id" />
+            android:value="AIzaSyDKR1mCbzPFTtzHRDIFS0gvt127XJUG9XM" />
 
         <activity android:name=".activities.AddFriendActivity" />
         <activity android:name=".activities.CreateUserActivity" />

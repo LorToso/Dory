@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Dory</string>
+    <string name="app_id" translatable="false">1469989006683</string>
+    <string name="app_key" translatable="false">AIzaSyDKR1mCbzPFTtzHRDIFS0gvt127XJUG9XM</string>
 
     <string name="facebook_app_id">994635050654109</string>
     <string name="fb_login_protocol_scheme">994635050654109</string>
