@@ -28,7 +28,6 @@ dependencies {
     compile 'com.googlecode.objectify:objectify:5.0.3'
     compile 'javax.servlet:servlet-api:2.5'
     compile 'com.google.firebase:firebase-server-sdk:[3.0.0,)'
-    compile group: 'com.google.guava', name: 'guava', version: '19.0'
 }
 
 appengine {
