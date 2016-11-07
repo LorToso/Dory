@@ -11,7 +11,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        multiDexEnabled true
+
     }
     buildTypes {
         release {
@@ -20,32 +20,39 @@ android {
         }
     }
 }
+repositories {
+    mavenCentral()
+
+    maven {
+        url "http://dl.bintray.com/journeyapps/maven"
+    }
+}
+
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     compile project(path: ':backend', configuration: 'android-endpoints')
 
-    testCompile group: 'com.google.appengine', name: 'appengine-testing', version: '1.4.0'
-    testCompile group: 'com.google.appengine', name: 'appengine-api-1.0-sdk', version: '1.4.3'
-
-    compile 'com.android.support:support-v13:24.2.1'
-    compile 'com.android.support:appcompat-v7:24.2.1'
-    compile 'com.android.support:support-v4:24.2.1'
-    compile 'com.android.support:design:24.2.1'
-    compile 'com.android.support:multidex:1.0.1'
-    compile 'com.google.android.gms:play-services:9.6.1'
-    compile 'com.google.firebase:firebase-core:9.6.1'
-    compile 'com.google.firebase:firebase-auth:9.6.1'
-    compile 'com.firebaseui:firebase-ui-auth:0.4.4'
-    compile 'org.jetbrains:annotations-java5:15.0'
+    runtime 'com.android.support:support-v13:24.2.1'
+    runtime 'com.android.support:appcompat-v7:24.2.1'
+    //compile 'com.android.support:support-v4:24.2.1'
+    runtime 'com.android.support:design:24.2.1'
+    //compile 'com.android.support:multidex:1.0.1'
+    runtime 'com.google.android.gms:play-services:9.6.1'
+    runtime 'com.google.firebase:firebase-core:9.6.1'
+    runtime 'com.google.firebase:firebase-auth:9.6.1'
+    runtime 'com.firebaseui:firebase-ui-auth:0.4.4'
     compile 'com.google.code.gson:gson:2.4'
-    compile 'com.shamanland:xdroid-toaster:0.0.10'
-    compile 'com.google.firebase:firebase-crash:9.6.1'
-    testCompile 'junit:junit:4.12'
-    testCompile 'com.google.appengine:appengine-endpoints:1.9.42'
-    androidTestCompile 'com.android.support.test:rules:0.5'
-    androidTestCompile 'org.testng:testng:6.9.6'
+    runtime 'com.shamanland:xdroid-toaster:0.0.10'
+    runtime 'com.google.firebase:firebase-crash:9.6.1'
+    runtime 'com.android.support.test:rules:0.5'
+    runtime 'org.testng:testng:6.9.6'
+
+    // Version 3.0.x of zxing core contains some code that is not compatible on Android 2.2 and earlier.
+    // This mostly affects encoding, but you should test if you plan to support these versions.
+    // Older versions e.g. 2.2 may also work if you need support for older Android versions.
+    compile 'com.google.zxing:core:3.0.1'
 }
 
 
