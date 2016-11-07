@@ -1,10 +1,12 @@
 package com.doryapp.dory.activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
@@ -51,6 +53,12 @@ public class ScreenSlidePagerActivity extends Activity implements FirebaseUserPr
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
     private GoogleApiClient client;
+
+    @Override
+    protected void attachBaseContext(Context context) {
+        super.attachBaseContext(context);
+        //MultiDex.install(this);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
