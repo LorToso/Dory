@@ -41,8 +41,16 @@ public class ApplicationTest {
     @Before
     public void before()
     {
-        signInTestUser();
-        boolean userExists = new DoesUserExistCall(con, firebaseAuth.getCurrentUser().getUid()).executeSynchronously();
+        FirebaseUser user = signInTestUser();
+        boolean userExists = (Boolean)new DoesUserExistCall(con, user.getUid())
+                .onException(
+                    new ApiCall.OnException() {
+                        @Override
+                        public void handle(Exception ex) {
+                            Assert.fail("Could not contact backend-server.");
+                        }
+                    }
+                ).executeSynchronously();
         if(userExists)
             new DeleteOwnUserCall(con).executeSynchronously();
         logoutIfNecessary();

@@ -1,4 +1,5 @@
 # Dory
+[![Run Status](https://api.shippable.com/projects/581737b52fed730e00aaeb5c/badge?branch=master)](https://app.shippable.com/projects/581737b52fed730e00aaeb5c)
 
 ## The idea
 Have you ever travelled to a different city, maybe even a different country and thought: "Hm, don't I know somebody who lives here?". Dory is the solution to this. It is a social network which allows you to keep track of where your friends live. The features will include:
