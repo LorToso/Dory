@@ -25,24 +25,27 @@ import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
 public class ApplicationTest {
-    private static Context con;
     private static FirebaseAuth firebaseAuth;
     private static Resources resources;
 
     @BeforeClass
     public static void beforeClass() {
-        con = InstrumentationRegistry.getTargetContext();
-        resources = con.getResources();
+        resources = getContext().getResources();
         firebaseAuth = FirebaseAuth.getInstance();
 
         logoutIfNecessary();
+    }
+
+    private static Context getContext()
+    {
+        return InstrumentationRegistry.getTargetContext();
     }
 
     @Before
     public void before()
     {
         FirebaseUser user = signInTestUser();
-        boolean userExists = (Boolean)new DoesUserExistCall(con, user.getUid())
+        boolean userExists = (Boolean)new DoesUserExistCall(getContext(), user.getUid())
                 .onException(
                     new ApiCall.OnException() {
                         @Override
@@ -52,7 +55,7 @@ public class ApplicationTest {
                     }
                 ).executeSynchronously();
         if(userExists)
-            new DeleteOwnUserCall(con).executeSynchronously();
+            new DeleteOwnUserCall(getContext()).executeSynchronously();
         logoutIfNecessary();
     }
     @After
@@ -70,7 +73,7 @@ public class ApplicationTest {
     @Test
     public void canConnectToServer()
     {
-        new NopCall(con).onException(new ApiCall.OnException() {
+        new NopCall(getContext()).onException(new ApiCall.OnException() {
             @Override
             public void handle(Exception ex) {
                 Assert.fail();
@@ -101,7 +104,7 @@ public class ApplicationTest {
     public void canCreateUser() {
         FirebaseUser user = signInTestUser();
 
-        boolean userExists = new DoesUserExistCall(con, user.getUid()).executeSynchronously();
+        boolean userExists = new DoesUserExistCall(getContext(), user.getUid()).executeSynchronously();
         Assert.assertFalse(userExists);
 
         DoryUser doryUser = new DoryUser();
@@ -111,18 +114,19 @@ public class ApplicationTest {
         doryUser.setEmailAddress(user.getEmail());
         doryUser.setId(user.getUid());
 
-        new CreateUserCall(con, doryUser).executeSynchronously();
+        new CreateUserCall(getContext(), doryUser).executeSynchronously();
 
-        userExists = new DoesUserExistCall(con, user.getUid()).executeSynchronously();
+        userExists = new DoesUserExistCall(getContext(), user.getUid()).executeSynchronously();
         Assert.assertTrue(userExists);
 
-        boolean userWasDeleted = new DeleteOwnUserCall(con).executeSynchronously();
+        boolean userWasDeleted = new DeleteOwnUserCall(getContext()).executeSynchronously();
         Assert.assertTrue(userWasDeleted);
 
-        userExists = new DoesUserExistCall(con, user.getUid()).executeSynchronously();
+        userExists = new DoesUserExistCall(getContext(), user.getUid()).executeSynchronously();
         Assert.assertFalse(userExists);
    }
     // TODO test all methods of MyEndpoint
     // TODO Create according apiCalls
+    // TODO Create a test that checks whether the nickname is at least 4 characters long. There is an issue for that on github
 
 }
