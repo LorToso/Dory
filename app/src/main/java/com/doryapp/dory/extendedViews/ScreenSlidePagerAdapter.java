@@ -3,6 +3,7 @@ package com.doryapp.dory.extendedViews;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v13.app.FragmentStatePagerAdapter;
 
 import com.doryapp.dory.fragments.CodeFragment;
@@ -11,7 +12,7 @@ import com.doryapp.dory.fragments.MapFragment;
 import com.doryapp.dory.fragments.ProfileFragment;
 import com.doryapp.dory.fragments.SettingsFragment;
 
-public class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
+public class ScreenSlidePagerAdapter extends FragmentPagerAdapter {
 
 
     private Fragment[] pages = new Fragment[]{
