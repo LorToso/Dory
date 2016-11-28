@@ -27,19 +27,18 @@
         />
 
 
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="75dp"
-        android:layout_marginRight="16dp"
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_marginBottom="75dp"-->
+        <!--android:layout_marginRight="16dp"-->
+        <!--android:clickable="true"-->
+        <!--android:onClick="onClickAddFriend"-->
+        <!--android:id="@+id/btnAddFriendFloating"-->
+        <!--android:src="@drawable/ic_person_add_black_48dp"-->
 
-        app:fabSize="normal"
-        android:clickable="true"
-        android:onClick="onClickAddFriend"
-        android:id="@+id/btnAddFriend"
-        android:src="@drawable/ic_person_add_black_48dp"
-        />
+    <!--/>-->
 </RelativeLayout>
 

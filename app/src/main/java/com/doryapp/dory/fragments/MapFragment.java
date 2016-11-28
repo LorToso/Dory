@@ -10,53 +10,74 @@ import android.view.ViewGroup;
 
 
 import com.doryapp.dory.R;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
-/**
- * A simple {@link Fragment} subclass.
- * create an instance of this fragment.
- */
-public class MapFragment extends Fragment  implements OnMapReadyCallback {
+import xdroid.toaster.Toaster;
 
+
+public class MapFragment extends Fragment implements OnMapReadyCallback {
+
+    MapView mMapView;
     private GoogleMap googleMap;
-    private boolean mapIsInitialized = false;
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_map, container, false);
 
-    public MapFragment() {
+        mMapView = (MapView) rootView.findViewById(R.id.gmapfragment);
+        mMapView.onCreate(savedInstanceState);
 
+        mMapView.onResume(); // needed to get the map to display immediately
+
+        try {
+            MapsInitializer.initialize(getActivity().getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toaster.toast("Error initializing the map!");
+        }
+
+        mMapView.getMapAsync(this);
+
+        return rootView;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //setupGoogleMap();
+    public void onResume() {
+        super.onResume();
+        mMapView.onResume();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        View v =  inflater.inflate(R.layout.fragment_map, container, false);
-        setupGoogleMap();
-        return v;
-    }
-
-    private void setupGoogleMap() {
-        if(mapIsInitialized)
-            return;
-        FragmentManager manager = getChildFragmentManager();
-        com.google.android.gms.maps.MapFragment f = (com.google.android.gms.maps.MapFragment) manager.findFragmentById(R.id.gmapfragment);
-        f.getMapAsync(this);
+    public void onPause() {
+        super.onPause();
+        mMapView.onPause();
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        this.googleMap = googleMap;
-        mapIsInitialized = true;
+    public void onDestroy() {
+        super.onDestroy();
+        mMapView.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mMapView.onLowMemory();
+    }
+
+    @Override
+    public void onMapReady(GoogleMap mMap) {
+        googleMap = mMap;
+
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         googleMap.getUiSettings().setRotateGesturesEnabled(false);
         googleMap.getUiSettings().setTiltGesturesEnabled(false);
     }
-
 }

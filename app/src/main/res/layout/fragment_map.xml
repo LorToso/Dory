@@ -16,10 +16,9 @@
         android:orientation="horizontal"
         android:onClick="onClickSearch" />
 
-    <fragment android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:name="com.google.android.gms.maps.MapFragment"
+    <com.google.android.gms.maps.MapView
         android:id="@+id/gmapfragment"
-        android:layout_gravity="center_horizontal"/>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </LinearLayout>
