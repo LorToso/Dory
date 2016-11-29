@@ -3,6 +3,7 @@ package com.doryapp.dory.fragments;
 import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,15 +15,11 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 
-/**
- * Created by Lorenzo Toso on 24.10.2016.
- */
 
 public class CodeFragment extends Fragment {
 
-    private static final int WIDTH = 250;
-    private static final int BLACK = 0;
-    private static final int WHITE = 255;
+    private static final int BLACK = 0xFFFFFFFF;
+    private static final int WHITE = 0xFF000000;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -30,7 +27,7 @@ public class CodeFragment extends Fragment {
                 R.layout.fragment_code, container, false);
 
 
-        ImageView imageView = (ImageView) getActivity().findViewById(R.id.codeView);
+        ImageView imageView = (ImageView) rootView.findViewById(R.id.codeView);
         if(imageView != null)
         {
             try {
@@ -46,9 +43,10 @@ public class CodeFragment extends Fragment {
 
     Bitmap encodeAsBitmap(String str) throws WriterException {
         BitMatrix result;
+        int width = getMaximumWidth();
         try {
             result = new MultiFormatWriter().encode(str,
-                    BarcodeFormat.QR_CODE, WIDTH, WIDTH, null);
+                    BarcodeFormat.QR_CODE, width, width, null);
         } catch (IllegalArgumentException iae) {
             // Unsupported format
             return null;
@@ -63,8 +61,14 @@ public class CodeFragment extends Fragment {
             }
         }
         Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-        bitmap.setPixels(pixels, 0, WIDTH, 0, 0, w, h);
+        bitmap.setPixels(pixels, 0, width, 0, 0, w, h);
         return bitmap;
+    }
+
+    private int getMaximumWidth() {
+        DisplayMetrics metrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        return Math.min(metrics.widthPixels, metrics.heightPixels);
     }
 
 }
