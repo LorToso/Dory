@@ -145,19 +145,19 @@ public class FriendsFragment extends Fragment {
                 R.layout.fragment_friends, container, false);
 
 
-//        FloatingActionButton button = (FloatingActionButton) view.findViewById(R.id.btnAddFriendFloating);
-//
-//        if(button != null)
-//        {
-//            button.setOnClickListener(new View.OnClickListener()
-//            {
-//                @Override
-//                public void onClick(View v)
-//                {
-//                    onClickAddFriend(v);
-//                }
-//            });
-//        }
+        FloatingActionButton button = (FloatingActionButton) view.findViewById(R.id.btnAddFriendFloating);
+
+        if(button != null)
+        {
+            button.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    onClickAddFriend(v);
+                }
+            });
+        }
 
         return view;
     }
