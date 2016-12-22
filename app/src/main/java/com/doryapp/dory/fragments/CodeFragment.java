@@ -1,20 +1,38 @@
 package com.doryapp.dory.fragments;
 
 import android.app.Fragment;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v13.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import com.doryapp.dory.R;
 import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import xdroid.toaster.Toaster;
+
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
 
 public class CodeFragment extends Fragment {
 
@@ -27,6 +45,22 @@ public class CodeFragment extends Fragment {
                 R.layout.fragment_code, container, false);
 
 
+
+        Button button = (Button) rootView.findViewById(R.id.scanBtn);
+
+        if(button != null)
+        {
+            button.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    onClickButtonScan();
+                }
+            });
+        }
+
+
         ImageView imageView = (ImageView) rootView.findViewById(R.id.codeView);
         if(imageView != null)
         {
@@ -37,11 +71,54 @@ public class CodeFragment extends Fragment {
         return rootView;
     }
 
+    private void onClickButtonScan() {
+        if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.CAMERA}, MY_PERMISSIONS_REQUEST_CAMERA);
+        } else {
+            startScan();
+        }
+    }
+
+    private void startScan() {
+        IntentIntegrator.forFragment(this).initiateScan(IntentIntegrator.QR_CODE_TYPES);
+    }
+
+
+    private static final int MY_PERMISSIONS_REQUEST_CAMERA = 555;
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_CAMERA: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                    startScan();
+            }
+        }
+    }
+
+
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+
+        if (requestCode == 49374) {
+            if (resultCode == RESULT_OK) {
+                String contents = intent.getStringExtra("SCAN_RESULT");
+//                String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
+                Toaster.toast(contents);
+                // TODO
+                // Handle successful scan
+            } else if (resultCode == RESULT_CANCELED) {
+                Toaster.toast("cancel");
+                // Handle cancel
+                // TODO
+            }
+        }
+    }
+
     private Bitmap getFriendshipCode() {
-        Bitmap logo = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.logo);
+        Bitmap logo = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.logo2);
 
         try {
-            Bitmap bitmap = generateQRFromString("testtesttesttesttest");
+            Bitmap bitmap = generateQRFromString("www.google.de");
             overlayLogo(bitmap, logo);
             return bitmap;
         } catch (WriterException e) {
@@ -52,14 +129,28 @@ public class CodeFragment extends Fragment {
 
     private void overlayLogo(Bitmap bitmap, Bitmap logo) {
 
-        int logoWidth = bitmap.getWidth()/3;
+        int logoWidth = bitmap.getWidth() / 3;
         int logoHeight = bitmap.getHeight() / 3;
+        int codeWidth = bitmap.getWidth();
+        int codeHeight = bitmap.getHeight();
 
         Bitmap scaledLogo = Bitmap.createScaledBitmap(logo, logoWidth, logoHeight, false);
 
-        int[] pixels = new int[scaledLogo.getWidth() * scaledLogo.getHeight()];
-        scaledLogo.getPixels(pixels, 0, logoWidth, 0, 0, logoWidth, logoHeight);
-        bitmap.setPixels(pixels, 0, logoWidth, logoWidth, logoHeight, logoWidth, logoHeight);
+        Canvas canvas = new Canvas(bitmap);
+        canvas.drawBitmap(scaledLogo, (float)codeWidth/2-logoWidth/2, (float)codeHeight/2-logoHeight/2, null);
+
+//        Canvas canvas =
+//        private Bitmap overlay(Bitmap bmp1, Bitmap bmp2) {
+//            Bitmap bmOverlay = Bitmap.createBitmap(bmp1.getWidth(), bmp1.getHeight(), bmp1.getConfig());
+//            Canvas canvas = new Canvas(bmOverlay);
+//            canvas.drawBitmap(bmp1, new Matrix(), null);
+//            canvas.drawBitmap(bmp2, new Matrix(), null);
+//            return bmOverlay;
+//        }
+
+//        int[] pixels = new int[logoWidth * logoHeight];
+//        scaledLogo.getPixels(pixels, 0, logoWidth, 0, 0, logoWidth, logoHeight);
+//        bitmap.setPixels(pixels, 0, logoWidth, codeWidth/2-logoWidth/2, codeHeight/2-logoHeight/2, logoWidth, logoHeight);
     }
 
     Bitmap generateQRFromString(String str) throws WriterException {
@@ -68,8 +159,9 @@ public class CodeFragment extends Fragment {
             int width = getMaximumWidth();
             int height = width;
             try {
-                result = new MultiFormatWriter().encode(str,
-                        BarcodeFormat.QR_CODE, width, height, null);
+                Map<EncodeHintType, ErrorCorrectionLevel> hints = new HashMap<>();
+                hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
+                result = new MultiFormatWriter().encode(str, BarcodeFormat.QR_CODE, width, height, hints);
             } catch (IllegalArgumentException iae) {
                 // Unsupported format
                 return null;
@@ -80,7 +172,7 @@ public class CodeFragment extends Fragment {
             for (int y = 0; y < h; y++) {
                 int offset = y * w;
                 for (int x = 0; x < w; x++) {
-                    pixels[offset + x] = result.get(x, y) ? BLACK : WHITE;
+                    pixels[offset + x] = result.get(x, y) ? WHITE : BLACK;
                 }
             }
             Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
