@@ -16,4 +16,14 @@
     <string name="user_profile_picture">User profile picture</string>
     <string name="ok">OK</string>
     <string name="placeholder">Placeholder</string>
+    <string name="qr_code_description">Code representing a user. It can be scanned to send friend requests.</string>
+    <string name="nick_name">Nick name</string>
+    <string name="name">Name</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+    <string name="current_city">Current City</string>
+    <string name="profile_picture">Profile picture</string>
+    <string name="connect">Connect</string>
+    <string name="connect_to_facebook">Connect to Facebook:</string>
+    <string name="connect_to_instagram">Connect to Instagram:</string>
 </resources>
