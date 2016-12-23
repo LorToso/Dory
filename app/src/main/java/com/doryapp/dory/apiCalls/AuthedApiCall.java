@@ -44,7 +44,7 @@ public abstract class AuthedApiCall<ReturnType> extends ApiCall<ReturnType>{
                     complete(value);
                 } catch (IOException e) {
                     handle(e);
-                    return;
+                    //return;
                 }
             }
         };
