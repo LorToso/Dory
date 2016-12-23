@@ -19,7 +19,8 @@
 
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:id="@+id/codeView" />
+        android:id="@+id/codeView"
+        android:contentDescription="@string/qr_code_description" />
 
 
 </RelativeLayout>

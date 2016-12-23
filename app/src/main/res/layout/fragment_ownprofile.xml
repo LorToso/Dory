@@ -48,7 +48,7 @@
 
 
     <TextView
-        android:text="Connect to Facebook:"
+        android:text="@string/connect_to_facebook"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/text_facebook"
@@ -56,7 +56,7 @@
         android:layout_marginTop="200dp" />
 
     <TextView
-        android:text="Connect to Instagram:"
+        android:text="@string/connect_to_instagram"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/text_instagram"
@@ -67,7 +67,7 @@
 
 
     <Button
-        android:text="Connect"
+        android:text="@string/connect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/locationView"
@@ -75,7 +75,7 @@
         android:layout_alignBaseline="@+id/text_facebook"
         android:id="@+id/button_facebook" />
     <Button
-        android:text="Connect"
+        android:text="@string/connect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/button_instagram"
