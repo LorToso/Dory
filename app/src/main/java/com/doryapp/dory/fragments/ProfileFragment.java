@@ -6,9 +6,11 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.doryapp.backend.myApi.model.DoryUser;
@@ -41,6 +43,7 @@ public class ProfileFragment extends Fragment implements FirebaseAuth.AuthStateL
         Location location = user.getLocation();
         ((TextView)getActivity().findViewById(R.id.locationView)).setText(location != null ? user.getLocation().toString() : "NO LOCATION SET");
         ((TextView)getActivity().findViewById(R.id.emailView)).setText(location != null ? user.getEmailAddress() : "NO EMAIL SET");
+        getActivity().findViewById(R.id.pictureView).setBackground(ContextCompat.getDrawable(getActivity(), R.mipmap.ic_no_profile_picture));
     }
 
     @Override
