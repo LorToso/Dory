@@ -10,20 +10,16 @@ import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 
 import com.doryapp.backend.myApi.model.DoryUser;
 import com.doryapp.dory.R;
 import com.doryapp.dory.activities.AddFriendActivity;
-import com.doryapp.dory.activities.CreateUserActivity;
-import com.doryapp.dory.activities.MainActivity;
 import com.doryapp.dory.activities.UserProfileActivity;
 import com.doryapp.dory.apiCalls.ApiCall;
 import com.doryapp.dory.apiCalls.GetFriendsByNicknameCall;
 import com.doryapp.dory.apiCalls.GetFriendsCall;
-import com.doryapp.dory.apiCalls.GetUsersCall;
 import com.doryapp.dory.apiCalls.SendFriendRequestCall;
 import com.doryapp.dory.extendedViews.UserButton;
 import com.doryapp.dory.extendedViews.UserDetailsViewWithAddButton;
@@ -33,10 +29,6 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-/**
- * Created by Lorenzo Toso on 24.10.2016.
- */
 
 public class FriendsFragment extends Fragment {
 
@@ -91,7 +83,7 @@ public class FriendsFragment extends Fragment {
         findUsersWithFilter(searchedName.toString());
     }
 
-    public void onClickAddFriend(View v)
+    public void onClickAddFriend()
     {
         Intent startActivity = new Intent(getActivity(),AddFriendActivity.class);
         startActivityForResult(startActivity, 0);
@@ -154,7 +146,7 @@ public class FriendsFragment extends Fragment {
                 @Override
                 public void onClick(View v)
                 {
-                    onClickAddFriend(v);
+                    onClickAddFriend();
                 }
             });
         }
