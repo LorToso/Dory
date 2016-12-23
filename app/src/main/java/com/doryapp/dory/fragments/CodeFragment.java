@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.doryapp.dory.R;
+import com.doryapp.dory.activities.FirebaseUserProvider;
 import com.doryapp.dory.apiCalls.SendFriendRequestCall;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
@@ -56,7 +57,7 @@ public class CodeFragment extends Fragment {
         ImageView imageView = (ImageView) rootView.findViewById(R.id.codeView);
         if(imageView != null)
         {
-            Bitmap bitmap = getFriendshipCode();
+            Bitmap bitmap = getUserQR();
             imageView.setImageBitmap(bitmap);
         }
     }
@@ -124,11 +125,12 @@ public class CodeFragment extends Fragment {
         Toaster.toast("Friend request to " + id + " sent!");
     }
 
-    private Bitmap getFriendshipCode() {
+    private Bitmap getUserQR() {
         Bitmap logo = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.logo2);
+        String userId = ((FirebaseUserProvider)getActivity()).getUser().getUid();
 
         try {
-            Bitmap bitmap = generateQRFromString("www.google.de");
+            Bitmap bitmap = generateQRFromString(userId);
             overlayLogo(bitmap, logo);
             return bitmap;
         } catch (WriterException e) {
