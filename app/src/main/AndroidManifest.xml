@@ -41,7 +41,7 @@
         <activity android:name=".activities.AddFriendActivity" />
         <activity android:name=".activities.CreateUserActivity" />
         <activity android:name=".activities.UserProfileActivity" />
-        <activity android:name=".activities.CodeScanActivity"></activity>
+        <activity android:name=".activities.CodeScanActivity" />
     </application>
 
 </manifest>
