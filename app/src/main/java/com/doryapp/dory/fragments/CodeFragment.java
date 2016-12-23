@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.doryapp.dory.R;
+import com.doryapp.dory.apiCalls.SendFriendRequestCall;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
@@ -38,6 +39,7 @@ public class CodeFragment extends Fragment {
 
     private static final int BLACK = 0xFFFFFFFF;
     private static final int WHITE = 0xFF000000;
+    public static final int ScanRequestCode = 49374;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -99,19 +101,24 @@ public class CodeFragment extends Fragment {
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
 
-        if (requestCode == 49374) {
-            if (resultCode == RESULT_OK) {
-                String contents = intent.getStringExtra("SCAN_RESULT");
-//                String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
-                Toaster.toast(contents);
-                // TODO
-                // Handle successful scan
-            } else if (resultCode == RESULT_CANCELED) {
-                Toaster.toast("cancel");
-                // Handle cancel
-                // TODO
-            }
+        if (requestCode == ScanRequestCode) {
+            handleCodeScanResult(resultCode, intent);
         }
+    }
+
+    private void handleCodeScanResult(int resultCode, Intent intent) {
+        if (resultCode == RESULT_OK) {
+            String contents = intent.getStringExtra("SCAN_RESULT");
+            Toaster.toast(contents);
+            sendFriendRequest(contents);
+        } else if (resultCode == RESULT_CANCELED) {
+            Toaster.toast("cancel");
+        }
+    }
+
+    private void sendFriendRequest(String id) {
+        new SendFriendRequestCall(getActivity(), id).execute();
+        Toaster.toast("Friend request to " + id + " sent!");
     }
 
     private Bitmap getFriendshipCode() {
@@ -122,7 +129,7 @@ public class CodeFragment extends Fragment {
             overlayLogo(bitmap, logo);
             return bitmap;
         } catch (WriterException e) {
-            e.printStackTrace();
+            Toaster.toast("Error generating the QR-Code");
         }
         return null;
     }
@@ -138,30 +145,17 @@ public class CodeFragment extends Fragment {
 
         Canvas canvas = new Canvas(bitmap);
         canvas.drawBitmap(scaledLogo, (float)codeWidth/2-logoWidth/2, (float)codeHeight/2-logoHeight/2, null);
-
-//        Canvas canvas =
-//        private Bitmap overlay(Bitmap bmp1, Bitmap bmp2) {
-//            Bitmap bmOverlay = Bitmap.createBitmap(bmp1.getWidth(), bmp1.getHeight(), bmp1.getConfig());
-//            Canvas canvas = new Canvas(bmOverlay);
-//            canvas.drawBitmap(bmp1, new Matrix(), null);
-//            canvas.drawBitmap(bmp2, new Matrix(), null);
-//            return bmOverlay;
-//        }
-
-//        int[] pixels = new int[logoWidth * logoHeight];
-//        scaledLogo.getPixels(pixels, 0, logoWidth, 0, 0, logoWidth, logoHeight);
-//        bitmap.setPixels(pixels, 0, logoWidth, codeWidth/2-logoWidth/2, codeHeight/2-logoHeight/2, logoWidth, logoHeight);
     }
 
+    @SuppressWarnings("SuspiciousNameCombination")
     Bitmap generateQRFromString(String str) throws WriterException {
         try {
             BitMatrix result;
             int width = getMaximumWidth();
-            int height = width;
             try {
                 Map<EncodeHintType, ErrorCorrectionLevel> hints = new HashMap<>();
                 hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
-                result = new MultiFormatWriter().encode(str, BarcodeFormat.QR_CODE, width, height, hints);
+                result = new MultiFormatWriter().encode(str, BarcodeFormat.QR_CODE, width, width, hints);
             } catch (IllegalArgumentException iae) {
                 // Unsupported format
                 return null;
