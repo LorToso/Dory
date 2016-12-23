@@ -13,7 +13,7 @@ public abstract class SimpleApiCall<ReturnType> extends ApiCall<ReturnType>{
                     complete(value);
                 } catch (IOException e) {
                     handle(e);
-                    return;
+                    //return;
                 }
             }
         };
