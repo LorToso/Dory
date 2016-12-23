@@ -46,10 +46,23 @@ public class CodeFragment extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(
                 R.layout.fragment_code, container, false);
 
+        setupScanButton(rootView);
+        showCode(rootView);
 
+        return rootView;
+    }
 
+    private void showCode(ViewGroup rootView) {
+        ImageView imageView = (ImageView) rootView.findViewById(R.id.codeView);
+        if(imageView != null)
+        {
+            Bitmap bitmap = getFriendshipCode();
+            imageView.setImageBitmap(bitmap);
+        }
+    }
+
+    private void setupScanButton(ViewGroup rootView) {
         Button button = (Button) rootView.findViewById(R.id.scanBtn);
-
         if(button != null)
         {
             button.setOnClickListener(new View.OnClickListener()
@@ -61,16 +74,6 @@ public class CodeFragment extends Fragment {
                 }
             });
         }
-
-
-        ImageView imageView = (ImageView) rootView.findViewById(R.id.codeView);
-        if(imageView != null)
-        {
-            Bitmap bitmap = getFriendshipCode();
-            imageView.setImageBitmap(bitmap);
-        }
-
-        return rootView;
     }
 
     private void onClickButtonScan() {
