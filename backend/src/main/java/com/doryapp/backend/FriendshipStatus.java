@@ -36,8 +36,8 @@ public class FriendshipStatus {
         SELF,
         NO_FRIEND,
         FRIEND,
-        REQUEST_SENT,
-        REQUEST_PENDING,
+        OWN_REQUEST_PENDING,
+        OTHER_REQUEST_PENDING,
+        UNKNOWN
     }
-
 }

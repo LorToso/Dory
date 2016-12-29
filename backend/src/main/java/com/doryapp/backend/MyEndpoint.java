@@ -183,6 +183,23 @@ public class MyEndpoint {
 
         return result;
     }
+    @ApiMethod(name = "getRequestingUsers", path = "getRequestingUsers", httpMethod = ApiMethod.HttpMethod.GET)
+    public List<DoryUser> getRequestingUsers(User user)
+    {
+        List<DoryUser> requestingUsers = new ArrayList<>();
+        List<FriendshipRequest> requests = getFriendshipRequests(user);
+
+        for (FriendshipRequest request : requests) {
+            Friendship friendship = request.getFriendship();
+
+            if(friendship.getUser1().equals(user.getId()))
+                requestingUsers.add(getUserById(friendship.getUser1()));
+            else
+                requestingUsers.add(getUserById(friendship.getUser2()));
+        }
+
+        return requestingUsers;
+    }
 
 
 
@@ -256,9 +273,9 @@ public class MyEndpoint {
         for (FriendshipRequest request : getFriendshipRequests(user)) {
             Friendship friendship = request.getFriendship();
             if(friendship.getUser1().equals(userId))
-                return new FriendshipStatus(FriendshipStatus.Status.REQUEST_SENT);
+                return new FriendshipStatus(FriendshipStatus.Status.OWN_REQUEST_PENDING);
             if(friendship.getUser1().equals(userId))
-                return new FriendshipStatus(FriendshipStatus.Status.REQUEST_PENDING);
+                return new FriendshipStatus(FriendshipStatus.Status.OTHER_REQUEST_PENDING);
         }
 
         return new FriendshipStatus(FriendshipStatus.Status.NO_FRIEND);

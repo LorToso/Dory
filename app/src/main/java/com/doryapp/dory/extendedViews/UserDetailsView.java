@@ -1,15 +1,17 @@
 package com.doryapp.dory.extendedViews;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.doryapp.backend.myApi.model.DoryUser;
-
-import static com.doryapp.dory.R.mipmap.ic_no_profile_picture;
+import com.doryapp.dory.activities.UserProfileActivity;
+import com.google.gson.Gson;
 
 
 public class UserDetailsView extends LinearLayout{
@@ -55,6 +57,7 @@ public class UserDetailsView extends LinearLayout{
     @NonNull
     private ImageView setupProfilePictureView(Context context) {
         profileView = new UserPictureView(context, user);
+        profileView.setOnClickListener(ShowProfile);
         return profileView;
     }
 
@@ -75,13 +78,22 @@ public class UserDetailsView extends LinearLayout{
             locationView.setText("LOCATION MISSING!"); // TODO this is a bit ugly, isnt it?
         return locationView;
     }
+//    public ImageView getProfileView()
+//    {
+//        return profileView;
+//    }
 
-    public void setPictureClickListener(OnClickListener listener)
-    {
-        profileView.setOnClickListener(listener);
-    }
-    public ImageView getProfileView()
-    {
-        return profileView;
+    View.OnClickListener ShowProfile = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            UserPictureView pictureView = (UserPictureView)view;
+            showProfile(pictureView.getUser());
+        }
+    };
+    private void showProfile(DoryUser user) {
+        Intent startActivity = new Intent(getContext(),UserProfileActivity.class);
+        startActivity.putExtra("user", new Gson().toJson(user));
+
+        getContext().startActivity(startActivity);
     }
 }

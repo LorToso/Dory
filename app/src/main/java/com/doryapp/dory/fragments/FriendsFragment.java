@@ -16,15 +16,12 @@ import android.widget.SearchView;
 import com.doryapp.backend.myApi.model.DoryUser;
 import com.doryapp.dory.R;
 import com.doryapp.dory.activities.AddFriendActivity;
-import com.doryapp.dory.activities.UserProfileActivity;
 import com.doryapp.dory.apiCalls.ApiCall;
 import com.doryapp.dory.apiCalls.GetFriendsByNicknameCall;
 import com.doryapp.dory.apiCalls.GetFriendsCall;
-import com.doryapp.dory.apiCalls.SendFriendRequestCall;
-import com.doryapp.dory.extendedViews.UserButton;
-import com.doryapp.dory.extendedViews.UserDetailsViewWithAddButton;
-import com.doryapp.dory.extendedViews.UserPictureView;
-import com.google.gson.Gson;
+import com.doryapp.dory.apiCalls.GetRequestingUsersCall;
+import com.doryapp.dory.extendedViews.FriendRequestView;
+import com.doryapp.dory.extendedViews.UserDetailsView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,6 +29,7 @@ import java.util.List;
 
 public class FriendsFragment extends Fragment {
 
+    List<DoryUser> friendRequests = new ArrayList<>();
     List<DoryUser> displayedUsers = new ArrayList<>();
     Handler mHandler = new Handler(Looper.getMainLooper()){
         @Override
@@ -50,10 +48,21 @@ public class FriendsFragment extends Fragment {
     public void onStart()
     {
         super.onStart();
-        findAllUsers();
+        findFriendRequests();
+        findAllFriends();
     }
 
-    private void findAllUsers() {
+    private void findFriendRequests() {
+        new GetRequestingUsersCall(getActivity()).onComplete(new ApiCall.OnComplete<List<DoryUser>>() {
+            @Override
+            public void execute(List<DoryUser> users) {
+                friendRequests = users;
+
+            }
+        }).execute();
+    }
+
+    private void findAllFriends() {
         new GetFriendsCall(getActivity()).onComplete(new ApiCall.OnComplete<List<DoryUser>>() {
             @Override
             public void execute(List<DoryUser> users) {
@@ -92,43 +101,46 @@ public class FriendsFragment extends Fragment {
     private void displayUsers() {
         LinearLayout view = (LinearLayout)getActivity().findViewById(R.id.userListView);
 
-        if(view.getChildCount() > 0)
-            view.removeAllViews();
+        clearViews(view);
+        showFriendRequests(view);
+        showFriends(view);
 
-        View.OnClickListener SendFriendRequest = new View.OnClickListener() {
+    }
+
+    private void showFriendRequests(LinearLayout view) {
+        View.OnClickListener acceptRequestCall = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                UserButton detailsView = (UserButton)view;
-                sendFriendRequestTo(detailsView.getUser());
+                // TODO
             }
         };
-        View.OnClickListener ShowProfile = new View.OnClickListener() {
+        View.OnClickListener ignoreRequestCall = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                UserPictureView pictureView = (UserPictureView)view;
-                showProfile(pictureView.getUser());
+                // TODO
             }
         };
+
 
         for(DoryUser user : displayedUsers)
         {
-            UserDetailsViewWithAddButton detailsView = new UserDetailsViewWithAddButton(getActivity(), user);
-            detailsView.setButtonClickListener(SendFriendRequest);
-            detailsView.setPictureClickListener(ShowProfile);
-            view.addView(detailsView);
+            FriendRequestView requestView = new FriendRequestView(getActivity(), user);
+            requestView.setAcceptButtonListener(acceptRequestCall);
+            requestView.setIgnoreButtonListener(ignoreRequestCall);
+            view.addView(requestView);
         }
-
     }
 
-    private void showProfile(DoryUser user) {
-        Intent startActivity = new Intent(getActivity(),UserProfileActivity.class);
-        startActivity.putExtra("user", new Gson().toJson(user));
-
-        startActivity(startActivity);
+    private void clearViews(LinearLayout view) {
+        if(view.getChildCount() > 0)
+            view.removeAllViews();
     }
 
-    private void sendFriendRequestTo(DoryUser user) {
-        new SendFriendRequestCall(getActivity(), user.getId()).execute();
+    private void showFriends(LinearLayout view) {
+        for(DoryUser user : displayedUsers)
+        {
+            view.addView(new UserDetailsView(getActivity(), user));
+        }
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

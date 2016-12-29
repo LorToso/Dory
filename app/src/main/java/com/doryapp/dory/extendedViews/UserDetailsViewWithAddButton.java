@@ -6,23 +6,29 @@ import android.os.Looper;
 import android.os.Message;
 import android.widget.Button;
 
-import com.doryapp.backend.myApi.MyApi;
 import com.doryapp.backend.myApi.model.DoryUser;
 import com.doryapp.backend.myApi.model.FriendshipStatus;
+import com.doryapp.dory.FriendshipStatusEnum;
 import com.doryapp.dory.apiCalls.ApiCall;
 import com.doryapp.dory.apiCalls.GetFriendshipStatusCall;
+import com.doryapp.dory.apiCalls.SendFriendRequestCall;
+
+import xdroid.toaster.Toaster;
 
 
 public class UserDetailsViewWithAddButton extends UserDetailsView {
-    Handler mHandler = new Handler(Looper.getMainLooper()){
+
+    private Handler mHandler = new Handler(Looper.getMainLooper()){
         @Override
         public void handleMessage(Message inputMessage) {
             addButton.setText(buttonText);
         }
     };
 
-    String buttonText = "";
-    Button addButton;
+    private FriendshipStatusEnum friendshipStatus;
+    private String buttonText = "";
+    private Button addButton;
+
 
     public UserDetailsViewWithAddButton(Context context, DoryUser user) {
         super(context, user);
@@ -37,7 +43,20 @@ public class UserDetailsViewWithAddButton extends UserDetailsView {
     private void setupAddButton(Context context) {
         addButton = new UserButton(context, user);
         addView(addButton);
+
         updateButtonStatus();
+        setupClickListener();
+    }
+
+    private void setupClickListener() {
+        if(friendshipStatus != FriendshipStatusEnum.NO_FRIEND)
+            return;
+        new SendFriendRequestCall(getContext(),user.getId()).onComplete(new ApiCall.OnComplete<Void>() {
+            @Override
+            public void execute(Void param) {
+                Toaster.toast("Friend request sent to user " + user.getId());
+            }
+        }).execute();
     }
 
     private void updateButtonStatus()
@@ -45,31 +64,10 @@ public class UserDetailsViewWithAddButton extends UserDetailsView {
         new GetFriendshipStatusCall(getContext(), user.getId()).onComplete(new ApiCall.OnComplete<FriendshipStatus>() {
             @Override
             public void execute(FriendshipStatus param) {
-                switch (param.getFriendshipStatus())
-                {
-                    case "SELF":
-                        buttonText = "You";
-                        break;
-                    case "NO_FRIEND":
-                        buttonText = "Add";
-                        break;
-                    case "FRIEND":
-                        buttonText = "Friend";
-                        break;
-                    case "REQUEST_SENT":
-                        buttonText = "Sent";
-                        break;
-                    case "REQUEST_PENDING":
-                        buttonText = "Accept";
-                        break;
-                }
+                friendshipStatus = FriendshipStatusEnum.from(param);
+                buttonText = friendshipStatus.getButtonText();
                 mHandler.sendEmptyMessage(0);
             }
         }).execute();
-    }
-
-    public void setButtonClickListener(OnClickListener listener)
-    {
-        addButton.setOnClickListener(listener);
     }
 }

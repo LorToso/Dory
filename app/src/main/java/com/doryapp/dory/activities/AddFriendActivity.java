@@ -1,24 +1,19 @@
 package com.doryapp.dory.activities;
 
-import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 
 import com.doryapp.backend.myApi.model.DoryUser;
 import com.doryapp.dory.R;
-import com.doryapp.dory.extendedViews.UserButton;
-import com.doryapp.dory.extendedViews.UserDetailsViewWithAddButton;
 import com.doryapp.dory.apiCalls.ApiCall;
 import com.doryapp.dory.apiCalls.GetUsersCall;
-import com.doryapp.dory.apiCalls.SendFriendRequestCall;
-import com.doryapp.dory.extendedViews.UserPictureView;
-import com.google.gson.Gson;
+import com.doryapp.dory.extendedViews.UserDetailsViewWithAddButton;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -62,6 +57,7 @@ public class AddFriendActivity extends AppCompatActivity {
     }
 
     private void findUsersWithFilter(String nickName) {
+        // TODO
         new GetUsersCall(this, nickName).onComplete( new ApiCall.OnComplete<List<DoryUser>>() {
             @Override
             public void execute(List<DoryUser> users) {
@@ -83,39 +79,11 @@ public class AddFriendActivity extends AppCompatActivity {
         if(view.getChildCount() > 0)
             view.removeAllViews();
 
-        View.OnClickListener SendFriendRequest = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                UserButton detailsView = (UserButton)view;
-                sendFriendRequestTo(detailsView.getUser());
-            }
-        };
-        View.OnClickListener ShowProfile = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                UserPictureView pictureView = (UserPictureView)view;
-                showProfile(pictureView.getUser());
-            }
-        };
-
         for(DoryUser user : displayedUsers)
         {
-            UserDetailsViewWithAddButton detailsView = new UserDetailsViewWithAddButton(this, user);
-            detailsView.setButtonClickListener(SendFriendRequest);
-            detailsView.setPictureClickListener(ShowProfile);
-            view.addView(detailsView);
+            view.addView(new UserDetailsViewWithAddButton(this, user));
         }
-
     }
 
-    private void showProfile(DoryUser user) {
-        Intent startActivity = new Intent(this,UserProfileActivity.class);
-        startActivity.putExtra("user", new Gson().toJson(user));
 
-        startActivity(startActivity);
-    }
-
-    private void sendFriendRequestTo(DoryUser user) {
-        new SendFriendRequestCall(this, user.getId()).execute();
-    }
 }
